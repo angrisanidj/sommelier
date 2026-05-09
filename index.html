@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Sommelier — Riconoscimento ed Enciclopedia del Vino</title>
+
+<!-- ==================================================================== -->
+<!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
+<!-- Formato: data ISO + numero progressivo                                -->
+<!-- ==================================================================== -->
+<meta name="app-version" content="2026.05.09-001">
+
+<!-- ===== PWA META TAGS ===== -->
+<meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
+<meta name="theme-color" content="#4a1219">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sommelier">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="manifest" href='data:application/manifest+json,{"name":"Sommelier Digitale","short_name":"Sommelier","description":"Riconoscimento ed enciclopedia del vino","start_url":"./","display":"standalone","orientation":"portrait","background_color":"%23faf6ee","theme_color":"%234a1219","icons":[{"src":"data:image/svg%2Bxml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Crect width=%27512%27 height=%27512%27 fill=%27%234a1219%27/%3E%3Ctext x=%27256%27 y=%27340%27 font-size=%27260%27 text-anchor=%27middle%27 font-family=%27serif%27%3E🍷%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}'>
+
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM2YjIwMjgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyZDBhMGYiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgZmlsbD0idXJsKCNnKSIgcng9IjQwIi8+PHBhdGggZD0iTTYyIDQ4IGgyMCB2NDAgYzAgMTUtMTAgMjUtMTAgMjUgcy0xMC0xMC0xMC0yNXoiIGZpbGw9IiNiODkyNGEiLz48cmVjdCB4PSI2NCIgeT0iMTEwIiB3aWR0aD0iMTYiIGhlaWdodD0iMjUiIGZpbGw9IiNiODkyNGEiLz48Y2lyY2xlIGN4PSI3MiIgY3k9IjE0NSIgcj0iMTAiIGZpbGw9IiNiODkyNGEiLz48dGV4dCB4PSIxMjUiIHk9IjEwNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjQ1IiBmaWxsPSIjZjRlZGUyIiBmb250LXN0eWxlPSJpdGFsaWMiPlM8L3RleHQ+PC9zdmc+">
+<link rel="apple-touch-icon" sizes="152x152" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM2YjIwMjgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyZDBhMGYiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgZmlsbD0idXJsKCNnKSIgcng9IjQwIi8+PHBhdGggZD0iTTYyIDQ4IGgyMCB2NDAgYzAgMTUtMTAgMjUtMTAgMjUgcy0xMC0xMC0xMC0yNXoiIGZpbGw9IiNiODkyNGEiLz48cmVjdCB4PSI2NCIgeT0iMTEwIiB3aWR0aD0iMTYiIGhlaWdodD0iMjUiIGZpbGw9IiNiODkyNGEiLz48Y2lyY2xlIGN4PSI3MiIgY3k9IjE0NSIgcj0iMTAiIGZpbGw9IiNiODkyNGEiLz48dGV4dCB4PSIxMjUiIHk9IjEwNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjQ1IiBmaWxsPSIjZjRlZGUyIiBmb250LXN0eWxlPSJpdGFsaWMiPlM8L3RleHQ+PC9zdmc+">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM2YjIwMjgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyZDBhMGYiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgZmlsbD0idXJsKCNnKSIgcng9IjQwIi8+PHBhdGggZD0iTTYyIDQ4IGgyMCB2NDAgYzAgMTUtMTAgMjUtMTAgMjUgcy0xMC0xMC0xMC0yNXoiIGZpbGw9IiNiODkyNGEiLz48cmVjdCB4PSI2NCIgeT0iMTEwIiB3aWR0aD0iMTYiIGhlaWdodD0iMjUiIGZpbGw9IiNiODkyNGEiLz48Y2lyY2xlIGN4PSI3MiIgY3k9IjE0NSIgcj0iMTAiIGZpbGw9IiNiODkyNGEiLz48dGV4dCB4PSIxMjUiIHk9IjEwNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjQ1IiBmaWxsPSIjZjRlZGUyIiBmb250LXN0eWxlPSJpdGFsaWMiPlM8L3RleHQ+PC9zdmc+">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iIzRhMTIxOSIgcng9IjQwIi8+PHBhdGggZD0iTTYyIDQ4IGgyMCB2NDAgYzAgMTUtMTAgMjUtMTAgMjUgcy0xMC0xMC0xMC0yNXoiIGZpbGw9IiNiODkyNGEiLz48cmVjdCB4PSI2NCIgeT0iMTEwIiB3aWR0aD0iMTYiIGhlaWdodD0iMjUiIGZpbGw9IiNiODkyNGEiLz48Y2lyY2xlIGN4PSI3MiIgY3k9IjE0NSIgcj0iMTAiIGZpbGw9IiNiODkyNGEiLz48L3N2Zz4=">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bordeaux: #4a1219;
+    --bordeaux-deep: #2d0a0f;
+    --bordeaux-soft: #6b2028;
+    --cream: #f4ede2;
+    --cream-soft: #ede4d3;
+    --gold: #b8924a;
+    --gold-soft: #d4b878;
+    --gold-pale: #e8d4a8;
+    --ink: #1a1410;
+    --ink-soft: #4a3f35;
+    --ink-mute: #7a6f64;
+    --paper: #faf6ee;
+    --paper-warm: #f5efe2;
+    --rule: #d9cdb6;
+    --rule-soft: #e8dfc8;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Spectral', 'Cormorant Garamond', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.65;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior-y: contain;
+  }
+  body {
+    background-image:
+      radial-gradient(ellipse at 12% 8%, rgba(74, 18, 25, 0.05) 0%, transparent 45%),
+      radial-gradient(ellipse at 88% 92%, rgba(184, 146, 74, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(184, 146, 74, 0.02) 0%, transparent 70%);
+    position: relative;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0 0.18 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    z-index: 1;
+    mix-blend-mode: multiply;
+  }
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ===== UPDATE NOTIFICATION BANNER ===== */
+  .update-banner {
+    position: fixed;
+    top: var(--safe-top);
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--bordeaux), var(--bordeaux-deep));
+    color: var(--cream);
+    padding: 14px 20px;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(74, 18, 25, 0.3);
+    animation: slideDown 0.4s ease-out;
+    flex-wrap: wrap;
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+  .update-banner.show { display: flex; }
+  .update-banner-content {
+    flex: 1;
+    min-width: 200px;
+  }
+  .update-banner-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--gold-soft);
+    margin-bottom: 2px;
+  }
+  .update-banner-text {
+    font-family: 'Spectral', serif;
+    font-size: 12px;
+    opacity: 0.92;
+  }
+  .update-banner-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .update-btn {
+    background: var(--gold);
+    color: var(--bordeaux-deep);
+    border: none;
+    padding: 9px 18px;
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .update-btn:hover { background: var(--gold-soft); }
+  .update-dismiss {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid rgba(244, 237, 226, 0.3);
+    padding: 9px 14px;
+    cursor: pointer;
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .update-dismiss:hover { border-color: var(--cream); }
+
+  /* ===== HEADER ===== */
+  header {
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 36px;
+    margin-bottom: 56px;
+    position: relative;
+    animation: fadeInDown 0.9s ease-out;
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ornament {
+    color: var(--gold);
+    font-size: 13px;
+    margin-bottom: 18px;
+    letter-spacing: 0.6em;
+    line-height: 1;
+  }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(40px, 7vw, 64px);
+    font-weight: 500;
+    color: var(--bordeaux);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+  .tagline {
+    font-family: 'Spectral', serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--ink-mute);
+    font-weight: 400;
+  }
+  .badge-online {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 6px 16px;
+    background: var(--cream);
+    border: 1px solid var(--gold);
+    color: var(--bordeaux);
+    font-family: 'Spectral', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+  }
+  .badge-online::before {
+    content: '◆';
+    color: var(--gold);
+    margin-right: 8px;
+    font-size: 8px;
+  }
+  .version-tag {
+    display: block;
+    margin-top: 12px;
+    font-family: 'Spectral', serif;
+    font-size: 9px;
+    color: var(--ink-mute);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* ===== INSTALL PROMPT ===== */
+  .install-prompt {
+    display: none;
+    background: linear-gradient(135deg, var(--bordeaux), var(--bordeaux-deep));
+    color: var(--cream);
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    position: relative;
+    border-left: 3px solid var(--gold);
+    animation: fadeIn 0.4s;
+  }
+  .install-prompt.show { display: block; }
+  .install-prompt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    margin-bottom: 6px;
+    color: var(--gold-soft);
+  }
+  .install-prompt-text {
+    font-family: 'Spectral', serif;
+    font-size: 13px;
+    line-height: 1.55;
+    opacity: 0.92;
+  }
+  .install-prompt-text strong {
+    color: var(--gold-soft);
+    font-weight: 500;
+  }
+  .install-prompt-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--cream);
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.6;
+    padding: 4px 8px;
+  }
+  .install-prompt-close:hover { opacity: 1; }
+  .share-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    vertical-align: -2px;
+    margin: 0 2px;
+  }
+
+  /* ===== UPLOADER ===== */
+  .uploader-wrap { animation: fadeIn 0.7s ease-out 0.2s backwards; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .uploader {
+    background: var(--cream);
+    border: 1px dashed var(--gold);
+    padding: 64px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 32px;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  .uploader::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid transparent;
+    transition: border-color 0.4s ease;
+    pointer-events: none;
+  }
+  .uploader:hover, .uploader.dragover {
+    background: var(--cream-soft);
+    border-color: var(--bordeaux);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(74, 18, 25, 0.08);
+  }
+  .uploader:hover::before, .uploader.dragover::before {
+    border-color: var(--gold-soft);
+  }
+  .uploader-icon {
+    font-size: 56px;
+    color: var(--bordeaux);
+    margin-bottom: 18px;
+    line-height: 1;
+    display: inline-block;
+    transition: transform 0.4s ease;
+  }
+  .uploader:hover .uploader-icon { transform: rotate(-8deg) scale(1.05); }
+  .uploader-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    color: var(--bordeaux-deep);
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .uploader-sub {
+    font-size: 16px;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  #fileInput { display: none; }
+
+  /* ===== PREVIEW ===== */
+  .preview {
+    display: none;
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeInUp 0.5s ease-out;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .preview img {
+    max-width: 280px;
+    max-height: 380px;
+    border: 1px solid var(--rule);
+    padding: 10px;
+    background: white;
+    box-shadow: 0 16px 40px rgba(74, 18, 25, 0.15);
+  }
+  .actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  button {
+    font-family: 'Spectral', serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 15px 36px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-weight: 500;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
+  .btn-primary {
+    background: var(--bordeaux);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(212, 184, 120, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .btn-primary:hover { background: var(--bordeaux-deep); }
+  .btn-primary:hover::after { transform: translateX(100%); }
+  .btn-primary:disabled { background: var(--ink-mute); cursor: not-allowed; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--bordeaux);
+    border: 1px solid var(--bordeaux);
+  }
+  .btn-ghost:hover { background: var(--bordeaux); color: var(--cream); }
+
+  /* ===== LOADER ===== */
+  .loader {
+    display: none;
+    text-align: center;
+    padding: 64px 24px;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--rule);
+    border-top-color: var(--bordeaux);
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+  .loader-step {
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+  }
+  .loader-progress {
+    max-width: 240px;
+    height: 1px;
+    background: var(--rule);
+    margin: 24px auto 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .loader-progress::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 30%;
+    background: var(--bordeaux);
+    animation: progressSlide 1.8s ease-in-out infinite;
+  }
+  @keyframes progressSlide {
+    0% { left: -30%; }
+    100% { left: 100%; }
+  }
+
+  /* ===== RESULT ===== */
+  .result {
+    display: none;
+    background: white;
+    border: 1px solid var(--rule);
+    padding: 56px;
+    margin-bottom: 32px;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out;
+  }
+  .result::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px; right: -1px;
+    height: 4px;
+    background: var(--bordeaux);
+  }
+  .result::after {
+    content: '✦';
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    color: var(--gold);
+    font-size: 14px;
+  }
+  .wine-header {
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 32px;
+    margin-bottom: 36px;
+  }
+  .wine-producer {
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .wine-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(30px, 4.5vw, 44px);
+    color: var(--bordeaux-deep);
+    line-height: 1.1;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: -0.015em;
+  }
+  .wine-vintage {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 20px;
+  }
+  .wine-vintage strong {
+    color: var(--bordeaux);
+    font-weight: 600;
+    font-style: normal;
+  }
+  .confidence-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'Spectral', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-mute);
+    padding: 4px 10px;
+    border: 1px solid var(--rule);
+  }
+  .wine-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 28px;
+    margin-bottom: 40px;
+    padding: 28px;
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+  }
+  .wine-fact { text-align: center; }
+  .wine-fact-label {
+    font-family: 'Spectral', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .wine-fact-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    color: var(--bordeaux-deep);
+    line-height: 1.3;
+  }
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::before {
+    content: '§';
+    color: var(--bordeaux);
+    font-size: 16px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+  .section p {
+    margin-bottom: 14px;
+    font-size: 17px;
+    font-family: 'Spectral', serif;
+  }
+  .section p:last-child { margin-bottom: 0; }
+  .section ul {
+    padding-left: 0;
+    list-style: none;
+  }
+  .section li {
+    padding: 8px 0 8px 24px;
+    border-bottom: 1px dotted var(--rule-soft);
+    position: relative;
+    font-family: 'Spectral', serif;
+  }
+  .section li:last-child { border-bottom: none; }
+  .section li::before {
+    content: '◦';
+    position: absolute;
+    left: 4px;
+    color: var(--gold);
+  }
+
+  /* ===== MAP ===== */
+  .map-container {
+    width: 100%;
+    height: 360px;
+    border: 1px solid var(--rule);
+    margin-top: 12px;
+    background: var(--cream);
+  }
+  .map-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'Spectral', serif;
+    font-size: 13px;
+    color: var(--bordeaux);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--gold);
+    padding-bottom: 2px;
+  }
+  .map-link:hover { border-bottom-style: solid; color: var(--bordeaux-deep); }
+
+  /* ===== SOURCES ===== */
+  .sources {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .sources-title {
+    font-family: 'Spectral', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+  .sources a {
+    color: var(--bordeaux);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--gold);
+    margin-right: 14px;
+    display: inline-block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-family: 'Spectral', serif;
+  }
+  .sources a:hover {
+    color: var(--bordeaux-deep);
+    border-bottom-style: solid;
+  }
+
+  /* ===== ERROR ===== */
+  .error {
+    display: none;
+    background: #fef0ef;
+    border-left: 3px solid #a8323a;
+    padding: 22px 26px;
+    color: #6b1820;
+    margin-bottom: 24px;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  /* ===== API KEY MODAL ===== */
+  .api-banner {
+    background: var(--cream);
+    border: 1px solid var(--gold);
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    display: none;
+  }
+  .api-banner.show { display: block; animation: fadeIn 0.3s; }
+  .api-banner-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px;
+    color: var(--bordeaux);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .api-banner-text {
+    font-family: 'Spectral', serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .api-banner-text a { color: var(--bordeaux); }
+  .api-input-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .api-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 14px;
+    border: 1px solid var(--rule);
+    background: white;
+    font-family: 'Spectral', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
+  .api-input:focus { outline: none; border-color: var(--bordeaux); }
+  .api-status {
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-top: 12px;
+    color: var(--ink-mute);
+  }
+  .api-status.connected { color: #2d6b3a; }
+  .api-status.connected::before { content: '● '; }
+
+  .settings-bar {
+    text-align: right;
+    margin-bottom: 16px;
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .settings-link {
+    background: none;
+    border: none;
+    color: var(--ink-mute);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-family: inherit;
+    font-size: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+  }
+  .settings-link:hover { color: var(--bordeaux); }
+
+  /* ===== HISTORY ===== */
+  .history {
+    margin-top: 72px;
+    border-top: 1px solid var(--rule);
+    padding-top: 44px;
+  }
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .history-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 32px;
+    color: var(--bordeaux);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  .history-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .history-clear {
+    font-family: 'Spectral', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 12px;
+  }
+  .history-clear:hover { color: var(--bordeaux); }
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+  }
+  .history-card {
+    background: white;
+    border: 1px solid var(--rule);
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .history-card:hover {
+    border-color: var(--bordeaux);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(74, 18, 25, 0.08);
+  }
+  .history-card-producer {
+    font-family: 'Spectral', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .history-card-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 19px;
+    color: var(--bordeaux-deep);
+    line-height: 1.2;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .history-card-meta {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .history-empty {
+    text-align: center;
+    color: var(--ink-mute);
+    font-style: italic;
+    padding: 40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+  }
+  .history-card-delete {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: var(--ink-mute);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .history-card:hover .history-card-delete { opacity: 1; }
+  @media (hover: none) {
+    .history-card-delete { opacity: 0.5; }
+  }
+  .history-card-delete:hover { color: var(--bordeaux); }
+
+  footer {
+    text-align: center;
+    margin-top: 88px;
+    padding-top: 36px;
+    border-top: 1px solid var(--rule);
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-family: 'Spectral', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+  }
+  footer em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--gold);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 32px 18px 56px; }
+    .result { padding: 32px 22px; }
+    .uploader { padding: 44px 22px; }
+    .wine-grid { padding: 22px; gap: 20px; }
+    h1 { font-size: 42px; }
+    button { padding: 14px 28px; }
+  }
+
+  @media (display-mode: standalone) {
+    body { padding-top: max(var(--safe-top), 16px); }
+    .container { padding-top: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== UPDATE NOTIFICATION BANNER ===== -->
+<div class="update-banner" id="updateBanner">
+  <div class="update-banner-content">
+    <div class="update-banner-title">Nuova versione disponibile</div>
+    <div class="update-banner-text">Ricarica per applicare l'aggiornamento.</div>
+  </div>
+  <div class="update-banner-actions">
+    <button class="update-btn" id="updateApply">Aggiorna</button>
+    <button class="update-dismiss" id="updateDismiss">Più tardi</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <header>
+    <div class="ornament">⊹ ⊹ ⊹</div>
+    <h1>Sommelier <em>Digitale</em></h1>
+    <p class="tagline">Riconoscimento ed Enciclopedia del Vino</p>
+    <div class="badge-online">Powered by Claude · Web Search Enabled</div>
+    <div class="version-tag" id="versionTag">v —</div>
+  </header>
+
+  <div class="install-prompt" id="installPrompt">
+    <button class="install-prompt-close" id="installPromptClose" aria-label="Chiudi">✕</button>
+    <div class="install-prompt-title">Installa sulla schermata Home</div>
+    <div class="install-prompt-text">
+      Tocca l'icona <svg class="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M12 4l-4 4M12 4l4 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg> di condivisione di Safari, poi <strong>"Aggiungi a Home"</strong> per usare Sommelier come una vera app, a schermo intero.
+    </div>
+  </div>
+
+  <div class="settings-bar">
+    <button class="settings-link" id="settingsBtn">Impostazioni API</button>
+  </div>
+
+  <div class="api-banner" id="apiBanner">
+    <div class="api-banner-title">Configurazione API Anthropic</div>
+    <div class="api-banner-text">
+      Per funzionare, l'app necessita di una chiave API Anthropic. La chiave viene salvata localmente nel browser e non lascia mai questo dispositivo. Ottieni una chiave su <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a> — i nuovi account ricevono 5$ di credito gratuito (≈ 80-100 scansioni).
+    </div>
+    <div class="api-input-row">
+      <input type="password" class="api-input" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button class="btn-primary" id="apiKeySave">Salva</button>
+    </div>
+    <div class="api-status" id="apiStatus">Nessuna chiave configurata</div>
+  </div>
+
+  <div class="error" id="error"></div>
+
+  <div class="uploader-wrap" id="uploaderWrap">
+    <label class="uploader" id="uploader" for="fileInput">
+      <div class="uploader-icon">🍷</div>
+      <div class="uploader-title">Carica una bottiglia</div>
+      <div class="uploader-sub">Tocca per scattare una foto o sceglierla dalla galleria</div>
+      <input type="file" id="fileInput" accept="image/*" capture="environment">
+    </label>
+  </div>
+
+  <div class="preview" id="preview">
+    <img id="previewImg" alt="Anteprima bottiglia">
+    <div class="actions">
+      <button class="btn-primary" id="analyzeBtn">Analizza Vino</button>
+      <button class="btn-ghost" id="resetBtn">Cambia Foto</button>
+    </div>
+  </div>
+
+  <div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text" id="loaderText">Lettura dell'etichetta…</div>
+    <div class="loader-step" id="loaderStep">Fase 1 di 2 — Riconoscimento</div>
+    <div class="loader-progress"></div>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <div class="history" id="historySection">
+    <div class="history-header">
+      <h2 class="history-title">Cantina <em>Personale</em></h2>
+      <button class="history-clear" id="clearHistoryBtn">Svuota</button>
+    </div>
+    <div id="historyContent"></div>
+  </div>
+
+  <footer>
+    <em>In Vino Veritas</em>
+    Sommelier Digitale · Anno MMXXVI
+  </footer>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ============================================================
+  //  VERSIONE APPLICAZIONE
+  //  Modificare questa costante ad ogni rilascio per innescare
+  //  l'aggiornamento automatico sui dispositivi degli utenti.
+  //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
+  // ============================================================
+  const APP_VERSION = '2026.05.09-001';
+  const CACHE_PREFIX = 'sommelier-cache-';
+  const CACHE_NAME = CACHE_PREFIX + APP_VERSION;
+
+  // Mostra la versione nel footer del titolo
+  document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
+
+  // ============================================================
+  //  SERVICE WORKER CON VERSIONING AUTOMATICO
+  //  Strategia: network-first per il documento HTML principale
+  //  (così l'aggiornamento viene rilevato all'avvio), cache-first
+  //  per gli asset statici (font, immagini) per la velocità.
+  //  Le cache di versioni precedenti vengono eliminate all'attivazione.
+  // ============================================================
+  let updateAvailable = false;
+
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const APP_VERSION = '${APP_VERSION}';
+      const CACHE_PREFIX = '${CACHE_PREFIX}';
+      const CACHE_NAME = CACHE_PREFIX + APP_VERSION;
+
+      // Installazione: forza l'attivazione immediata della nuova versione
+      self.addEventListener('install', event => {
+        self.skipWaiting();
+      });
+
+      // Attivazione: pulisce le cache delle versioni precedenti
+      self.addEventListener('activate', event => {
+        event.waitUntil(
+          caches.keys().then(keys => Promise.all(
+            keys.filter(k => k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME)
+                .map(k => caches.delete(k))
+          )).then(() => self.clients.claim())
+        );
+      });
+
+      // Strategia di fetch
+      self.addEventListener('fetch', event => {
+        const req = event.request;
+        const url = new URL(req.url);
+
+        // Mai mettere in cache: API Anthropic, OSM tiles, metodi non-GET
+        if (req.method !== 'GET') return;
+        if (url.hostname === 'api.anthropic.com') return;
+        if (url.hostname.includes('openstreetmap')) return;
+        if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
+
+        const isHTML = req.mode === 'navigate' ||
+                       (req.headers.get('accept') || '').includes('text/html');
+
+        if (isHTML) {
+          // NETWORK-FIRST per HTML: garantisce che l'utente veda
+          // sempre la versione più recente quando online.
+          event.respondWith(
+            fetch(req).then(response => {
+              if (response.ok) {
+                const clone = response.clone();
+                caches.open(CACHE_NAME).then(c => c.put(req, clone)).catch(()=>{});
+              }
+              return response;
+            }).catch(() => caches.match(req).then(c => c || caches.match('./')))
+          );
+        } else {
+          // CACHE-FIRST per asset statici (font, immagini): velocità massima.
+          event.respondWith(
+            caches.match(req).then(cached => {
+              if (cached) return cached;
+              return fetch(req).then(response => {
+                if (response.ok) {
+                  const clone = response.clone();
+                  caches.open(CACHE_NAME).then(c => c.put(req, clone)).catch(()=>{});
+                }
+                return response;
+              });
+            })
+          );
+        }
+      });
+
+      // Comunicazione bidirezionale con la pagina
+      self.addEventListener('message', event => {
+        if (event.data && event.data.type === 'SKIP_WAITING') {
+          self.skipWaiting();
+        }
+        if (event.data && event.data.type === 'GET_VERSION') {
+          event.ports[0].postMessage({ version: APP_VERSION });
+        }
+      });
+    `;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+
+    navigator.serviceWorker.register(swUrl).then(registration => {
+      // Controllo aggiornamenti periodico (ogni volta che la pagina riprende focus)
+      registration.update();
+
+      // Rileva quando un nuovo service worker è in attesa
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // C'è una versione nuova in attesa di attivazione
+              updateAvailable = true;
+              showUpdateBanner();
+            }
+          });
+        }
+      });
+
+      // Quando l'utente accetta l'update, ricarica
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (updateAvailable) window.location.reload();
+      });
+
+      // Verifica aggiornamenti quando l'app torna in primo piano
+      // (utile per PWA installate su iPhone)
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          registration.update().catch(() => {});
+        }
+      });
+    }).catch(err => console.warn('SW registration failed:', err));
+  }
+
+  function showUpdateBanner() {
+    const banner = document.getElementById('updateBanner');
+    if (banner) banner.classList.add('show');
+  }
+
+  document.getElementById('updateApply').addEventListener('click', () => {
+    navigator.serviceWorker.getRegistration().then(registration => {
+      if (registration && registration.waiting) {
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      } else {
+        window.location.reload();
+      }
+    });
+  });
+
+  document.getElementById('updateDismiss').addEventListener('click', () => {
+    document.getElementById('updateBanner').classList.remove('show');
+  });
+
+  // ===== iOS install prompt =====
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
+  function isInStandaloneMode() {
+    return ('standalone' in navigator) && navigator.standalone === true;
+  }
+  function shouldShowInstallPrompt() {
+    if (!isIOS() || isInStandaloneMode()) return false;
+    if (localStorage.getItem('sommelier_install_dismissed_v1') === '1') return false;
+    return true;
+  }
+
+  const installPrompt = document.getElementById('installPrompt');
+  const installPromptClose = document.getElementById('installPromptClose');
+  if (shouldShowInstallPrompt()) {
+    setTimeout(() => installPrompt.classList.add('show'), 1200);
+  }
+  installPromptClose.addEventListener('click', () => {
+    installPrompt.classList.remove('show');
+    localStorage.setItem('sommelier_install_dismissed_v1', '1');
+  });
+
+  // ============================================================
+  //  LOGICA APPLICATIVA
+  // ============================================================
+  const STORAGE_KEY = 'sommelier_history_v2';
+  const APIKEY_STORAGE = 'sommelier_apikey_v1';
+  const MODEL = 'claude-sonnet-4-5-20250929';
+
+  const fileInput = document.getElementById('fileInput');
+  const uploader = document.getElementById('uploader');
+  const uploaderWrap = document.getElementById('uploaderWrap');
+  const preview = document.getElementById('preview');
+  const previewImg = document.getElementById('previewImg');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const loader = document.getElementById('loader');
+  const loaderText = document.getElementById('loaderText');
+  const loaderStep = document.getElementById('loaderStep');
+  const resultDiv = document.getElementById('result');
+  const errorDiv = document.getElementById('error');
+  const historyContent = document.getElementById('historyContent');
+  const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+  const settingsBtn = document.getElementById('settingsBtn');
+  const apiBanner = document.getElementById('apiBanner');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const apiKeySave = document.getElementById('apiKeySave');
+  const apiStatus = document.getElementById('apiStatus');
+
+  let currentImageData = null;
+  let currentMediaType = null;
+  let apiKey = localStorage.getItem(APIKEY_STORAGE) || '';
+
+  function updateApiStatus() {
+    if (apiKey && apiKey.startsWith('sk-ant-')) {
+      apiStatus.textContent = 'Chiave configurata · ' + apiKey.substring(0, 14) + '…';
+      apiStatus.className = 'api-status connected';
+    } else {
+      apiStatus.textContent = 'Nessuna chiave configurata';
+      apiStatus.className = 'api-status';
+    }
+  }
+
+  settingsBtn.addEventListener('click', () => {
+    apiBanner.classList.toggle('show');
+    if (apiBanner.classList.contains('show')) {
+      apiKeyInput.value = apiKey;
+      apiKeyInput.focus();
+    }
+  });
+
+  apiKeySave.addEventListener('click', () => {
+    const k = apiKeyInput.value.trim();
+    if (!k) {
+      localStorage.removeItem(APIKEY_STORAGE);
+      apiKey = '';
+    } else if (!k.startsWith('sk-ant-')) {
+      showError('La chiave non sembra valida. Deve iniziare con sk-ant-');
+      return;
+    } else {
+      localStorage.setItem(APIKEY_STORAGE, k);
+      apiKey = k;
+    }
+    updateApiStatus();
+    hideError();
+    setTimeout(() => apiBanner.classList.remove('show'), 800);
+  });
+
+  if (!apiKey) apiBanner.classList.add('show');
+  updateApiStatus();
+
+  fileInput.addEventListener('change', handleFileSelect);
+  ['dragover', 'dragleave', 'drop'].forEach(evt => {
+    uploader.addEventListener(evt, e => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (evt === 'dragover') uploader.classList.add('dragover');
+      else uploader.classList.remove('dragover');
+      if (evt === 'drop' && e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        handleFileSelect();
+      }
+    });
+  });
+
+  function handleFileSelect() {
+    const file = fileInput.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showError('Per favore carica un file immagine.');
+      return;
+    }
+    hideError();
+    resizeImage(file, 1600).then(({ data, mediaType }) => {
+      previewImg.src = 'data:' + mediaType + ';base64,' + data;
+      currentImageData = data;
+      currentMediaType = mediaType;
+      preview.style.display = 'block';
+      uploaderWrap.style.display = 'none';
+      resultDiv.style.display = 'none';
+    }).catch(err => {
+      console.error(err);
+      showError('Impossibile processare l\'immagine. Riprova.');
+    });
+  }
+
+  function resizeImage(file, maxDim) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width <= maxDim && height <= maxDim) {
+            const dataUrl = e.target.result;
+            resolve({ data: dataUrl.split(',')[1], mediaType: file.type });
+            return;
+          }
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const out = canvas.toDataURL('image/jpeg', 0.88);
+          resolve({ data: out.split(',')[1], mediaType: 'image/jpeg' });
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  resetBtn.addEventListener('click', () => {
+    fileInput.value = '';
+    currentImageData = null;
+    preview.style.display = 'none';
+    uploaderWrap.style.display = 'block';
+    resultDiv.style.display = 'none';
+    hideError();
+  });
+
+  analyzeBtn.addEventListener('click', analyzeWine);
+
+  async function analyzeWine() {
+    if (!apiKey) {
+      showError('Configura prima una chiave API Anthropic (pulsante Impostazioni in alto).');
+      apiBanner.classList.add('show');
+      return;
+    }
+    if (!currentImageData) return;
+
+    hideError();
+    preview.style.display = 'none';
+    resultDiv.style.display = 'none';
+    loader.style.display = 'block';
+    loaderText.textContent = "Lettura dell'etichetta…";
+    loaderStep.textContent = 'Fase 1 di 2 — Riconoscimento visivo';
+
+    try {
+      const identification = await identifyWine();
+      if (!identification || !identification.recognized) {
+        throw new Error(identification?.reason || "Non sono riuscito a leggere l'etichetta. Prova con una foto più nitida o frontale.");
+      }
+
+      loaderText.textContent = 'Ricerca informazioni dettagliate sul web…';
+      loaderStep.textContent = 'Fase 2 di 2 — Documentazione';
+
+      const details = await fetchWineDetails(identification);
+
+      const fullData = { ...identification, ...details, scannedAt: new Date().toISOString() };
+      renderResult(fullData);
+      saveToHistory(fullData);
+      renderHistory();
+    } catch (err) {
+      console.error(err);
+      showError(err.message || 'Si è verificato un errore. Riprova.');
+      preview.style.display = 'block';
+    } finally {
+      loader.style.display = 'none';
+    }
+  }
+
+  async function identifyWine() {
+    const prompt = `Sei un sommelier esperto. Esamina questa foto di una bottiglia di vino e identifica il vino dall'etichetta con la massima precisione possibile.
+
+Rispondi ESCLUSIVAMENTE con un oggetto JSON valido (nessun testo prima o dopo, nessun markdown, nessun blocco di codice), secondo questa struttura:
+{
+  "recognized": true/false,
+  "reason": "se recognized=false, spiega brevemente in italiano perché",
+  "producer": "nome del produttore/cantina (es. 'Antinori', 'Château Margaux')",
+  "wineName": "nome specifico del vino o denominazione principale",
+  "vintage": "annata se leggibile (numero di 4 cifre), altrimenti null",
+  "denomination": "DOC/DOCG/IGT/AOC/DO/DOCa se visibile, altrimenti null",
+  "country": "paese in italiano",
+  "region": "regione/area vitivinicola in italiano",
+  "confidence": "alta/media/bassa"
+}
+
+Se l'immagine non contiene una bottiglia di vino o l'etichetta è completamente illeggibile, restituisci recognized=false con la ragione.`;
+
+    const response = await callAPI({
+      model: MODEL,
+      max_tokens: 800,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: currentMediaType, data: currentImageData } },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    });
+
+    const text = extractText(response);
+    return parseJSON(text);
+  }
+
+  async function fetchWineDetails(id) {
+    const wineQuery = [id.producer, id.wineName, id.vintage, id.denomination].filter(Boolean).join(' ');
+
+    const prompt = `Sei un sommelier professionista. Cerca sul web informazioni accurate e attuali sul seguente vino e produci una scheda completa in italiano.
+
+VINO DA RICERCARE: ${wineQuery}
+Paese: ${id.country || 'sconosciuto'}
+Regione: ${id.region || 'sconosciuta'}
+
+Usa la web_search per verificare e arricchire le informazioni con fonti affidabili: sito ufficiale del produttore, guide vinicole (Gambero Rosso, Slow Food, Vinous, Wine Spectator), riviste specializzate, Wikipedia, consorzi di tutela.
+
+Dopo aver completato le ricerche, rispondi ESCLUSIVAMENTE con un oggetto JSON valido (nessun markdown, nessun testo aggiuntivo, nessun blocco di codice), secondo questa struttura ESATTA:
+{
+  "type": "tipologia (es. 'Rosso fermo', 'Bianco fermo', 'Spumante metodo classico', 'Passito')",
+  "grapes": ["array di vitigni"],
+  "alcohol": "gradazione alcolica (es. '13.5%') o null",
+  "tastingNotes": "note di degustazione in 2-4 frasi in italiano: aspetto visivo, naso (profumi), palato (gusto e finale)",
+  "pairings": ["lista di 3-5 abbinamenti gastronomici"],
+  "servingTemp": "temperatura di servizio consigliata (es. '16-18°C') o null",
+  "agingPotential": "potenziale di invecchiamento (es. '5-10 anni dalla vendemmia') o null",
+  "history": "breve nota in 2-3 frasi sulla storia della cantina e/o del vino specifico",
+  "vineyardLocation": {
+    "name": "nome del comune o zona vitivinicola dove si trovano i vigneti",
+    "lat": numero_decimale_latitudine,
+    "lng": numero_decimale_longitudine
+  },
+  "sources": [
+    {"title": "titolo della fonte", "url": "url completo"}
+  ]
+}
+
+REGOLE IMPORTANTI:
+- Se un campo non è disponibile dalle fonti, usa null (mai inventare).
+- Includi 2-4 fonti citate effettivamente consultate.
+- Le coordinate possono essere quelle del comune principale di produzione anche se approssimative.
+- Tutto in italiano, eccetto i nomi propri e i toponimi.`;
+
+    const response = await callAPI({
+      model: MODEL,
+      max_tokens: 2500,
+      messages: [{ role: 'user', content: prompt }],
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }]
+    });
+
+    const text = extractText(response);
+    return parseJSON(text);
+  }
+
+  async function callAPI(body) {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      let msg = 'Errore API';
+      try {
+        const errJson = JSON.parse(errText);
+        msg = errJson.error?.message || msg;
+      } catch { msg = errText.substring(0, 250); }
+      throw new Error(msg);
+    }
+    return await response.json();
+  }
+
+  function extractText(data) {
+    if (!data || !data.content) throw new Error('Risposta API malformata');
+    return data.content
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
+      .join('')
+      .trim();
+  }
+
+  function parseJSON(text) {
+    let cleaned = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+    const start = cleaned.indexOf('{');
+    const end = cleaned.lastIndexOf('}');
+    if (start !== -1 && end !== -1) cleaned = cleaned.substring(start, end + 1);
+    try {
+      return JSON.parse(cleaned);
+    } catch (e) {
+      console.error('Parse error on:', cleaned);
+      throw new Error("La risposta del modello non era in formato JSON valido. Riprova.");
+    }
+  }
+
+  function renderResult(d) {
+    const facts = [];
+    if (d.type) facts.push(['Tipologia', d.type]);
+    if (d.grapes && d.grapes.length) facts.push(['Vitigni', d.grapes.join(', ')]);
+    if (d.alcohol) facts.push(['Gradazione', d.alcohol]);
+    if (d.servingTemp) facts.push(['Servizio', d.servingTemp]);
+    if (d.agingPotential) facts.push(['Invecchiamento', d.agingPotential]);
+    if (d.denomination) facts.push(['Denominazione', d.denomination]);
+    if (d.region) facts.push(['Regione', d.region]);
+
+    const factsHTML = facts.map(([l, v]) =>
+      `<div class="wine-fact"><div class="wine-fact-label">${escapeHTML(l)}</div><div class="wine-fact-value">${escapeHTML(v)}</div></div>`
+    ).join('');
+
+    const tastingHTML = d.tastingNotes
+      ? `<div class="section"><div class="section-title">Note di Degustazione</div><p>${escapeHTML(d.tastingNotes)}</p></div>`
+      : '';
+
+    const pairingsHTML = d.pairings && d.pairings.length
+      ? `<div class="section"><div class="section-title">Abbinamenti Gastronomici</div><ul>${d.pairings.map(p => `<li>${escapeHTML(p)}</li>`).join('')}</ul></div>`
+      : '';
+
+    const historyHTML = d.history
+      ? `<div class="section"><div class="section-title">Storia &amp; Cantina</div><p>${escapeHTML(d.history)}</p></div>`
+      : '';
+
+    let mapHTML = '';
+    if (d.vineyardLocation && d.vineyardLocation.lat && d.vineyardLocation.lng) {
+      const { lat, lng, name } = d.vineyardLocation;
+      const bbox = `${lng - 0.12},${lat - 0.06},${lng + 0.12},${lat + 0.06}`;
+      const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
+      mapHTML = `<div class="section">
+        <div class="section-title">Territorio${name ? ' — ' + escapeHTML(name) : ''}</div>
+        <iframe class="map-container" src="${mapUrl}" loading="lazy" title="Mappa vigneti"></iframe>
+        <a class="map-link" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=11/${lat}/${lng}" target="_blank" rel="noopener">Apri mappa estesa →</a>
+      </div>`;
+    }
+
+    const sourcesHTML = d.sources && d.sources.length
+      ? `<div class="sources">
+          <div class="sources-title">Fonti consultate</div>
+          ${d.sources.map(s => `<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener">${escapeHTML(s.title)}</a>`).join('')}
+        </div>`
+      : '';
+
+    const confidenceHTML = d.confidence
+      ? `<div class="confidence-tag">Riconoscimento · confidenza ${escapeHTML(d.confidence)}</div>`
+      : '';
+
+    resultDiv.innerHTML = `
+      <div class="wine-header">
+        ${d.producer ? `<div class="wine-producer">${escapeHTML(d.producer)}</div>` : ''}
+        <div class="wine-name">${escapeHTML(d.wineName || 'Vino')}</div>
+        ${d.vintage ? `<div class="wine-vintage">Annata <strong>${escapeHTML(String(d.vintage))}</strong></div>` : ''}
+        ${confidenceHTML}
+      </div>
+      ${facts.length ? `<div class="wine-grid">${factsHTML}</div>` : ''}
+      ${tastingHTML}
+      ${pairingsHTML}
+      ${historyHTML}
+      ${mapHTML}
+      ${sourcesHTML}
+      <div class="actions" style="margin-top: 40px;">
+        <button class="btn-ghost" id="newScanBtn">Scansiona un'altra bottiglia</button>
+      </div>
+    `;
+    document.getElementById('newScanBtn').addEventListener('click', () => resetBtn.click());
+    resultDiv.style.display = 'block';
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+
+  function saveToHistory(data) {
+    const h = loadHistory();
+    const lite = {
+      producer: data.producer,
+      wineName: data.wineName,
+      vintage: data.vintage,
+      type: data.type,
+      region: data.region,
+      country: data.country,
+      scannedAt: data.scannedAt,
+      _full: data
+    };
+    h.unshift(lite);
+    const capped = h.slice(0, 60);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(capped)); } catch {}
+  }
+
+  function renderHistory() {
+    const h = loadHistory();
+    if (!h.length) {
+      historyContent.innerHTML = '<div class="history-empty">La tua cantina è ancora vuota. Scansiona la prima bottiglia per iniziare.</div>';
+      return;
+    }
+    historyContent.innerHTML = '<div class="history-grid">' + h.map((item, idx) => `
+      <div class="history-card" data-idx="${idx}">
+        <button class="history-card-delete" data-del="${idx}" title="Rimuovi">✕</button>
+        ${item.producer ? `<div class="history-card-producer">${escapeHTML(item.producer)}</div>` : ''}
+        <div class="history-card-name">${escapeHTML(item.wineName || 'Vino')}</div>
+        <div class="history-card-meta">
+          ${item.vintage ? escapeHTML(String(item.vintage)) + ' · ' : ''}${escapeHTML(item.region || item.country || '')}
+        </div>
+      </div>
+    `).join('') + '</div>';
+
+    historyContent.querySelectorAll('.history-card').forEach(card => {
+      card.addEventListener('click', e => {
+        if (e.target.dataset.del !== undefined) return;
+        const idx = parseInt(card.dataset.idx);
+        const full = loadHistory()[idx]._full;
+        if (full) {
+          renderResult(full);
+          preview.style.display = 'none';
+          uploaderWrap.style.display = 'block';
+        }
+      });
+    });
+    historyContent.querySelectorAll('[data-del]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.del);
+        const h = loadHistory();
+        h.splice(idx, 1);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+        renderHistory();
+      });
+    });
+  }
+
+  clearHistoryBtn.addEventListener('click', () => {
+    if (confirm('Svuotare completamente la cantina?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      renderHistory();
+    }
+  });
+
+  function showError(msg) {
+    errorDiv.textContent = msg;
+    errorDiv.style.display = 'block';
+    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function hideError() { errorDiv.style.display = 'none'; }
+  function escapeHTML(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  renderHistory();
+})();
+</script>
+</body>
+</html>

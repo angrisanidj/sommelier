@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-005">
+<meta name="app-version" content="2026.05.09-007">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -91,7 +91,7 @@
   .container {
     max-width: 980px;
     margin: 0 auto;
-    padding: 56px 24px 96px;
+    padding: 40px 24px 80px;
     position: relative;
     z-index: 2;
   }
@@ -100,8 +100,8 @@
   header {
     text-align: center;
     border-bottom: 1px solid var(--rule);
-    padding-bottom: 36px;
-    margin-bottom: 56px;
+    padding-bottom: 28px;
+    margin-bottom: 40px;
     position: relative;
     animation: fadeInDown 0.9s ease-out;
   }
@@ -407,13 +407,33 @@
     height: 4px;
     background: var(--bordeaux);
   }
-  .result::after {
-    content: '✦';
+  .result-close {
     position: absolute;
-    top: 24px;
-    right: 28px;
-    color: var(--gold);
-    font-size: 14px;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-mute);
+    cursor: pointer;
+    font-family: 'Spectral', serif;
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+    z-index: 5;
+  }
+  .result-close:hover {
+    background: var(--bordeaux);
+    color: var(--cream);
+    border-color: var(--bordeaux);
+  }
+  .result-close::before {
+    content: '✕';
   }
   .wine-header {
     text-align: center;
@@ -847,19 +867,23 @@
   .api-status.connected::before { content: '● '; }
 
   .settings-bar {
-    text-align: right;
-    margin-bottom: 16px;
+    text-align: center;
+    margin-top: 56px;
+    margin-bottom: 0;
     font-family: 'Spectral', serif;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.2em;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
   }
+  .settings-bar:hover { opacity: 1; }
   .settings-link {
     background: none;
     border: none;
     color: var(--ink-mute);
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 8px 16px;
     font-family: inherit;
     font-size: inherit;
     text-transform: inherit;
@@ -994,17 +1018,25 @@
   }
 
   @media (max-width: 600px) {
-    .container { padding: 32px 18px 56px; }
+    .container { padding: 24px 18px 56px; }
     .result { padding: 32px 22px; }
     .uploader { padding: 44px 22px; }
     .wine-grid { padding: 22px; gap: 20px; }
     h1 { font-size: 42px; }
     button { padding: 14px 28px; }
+    header {
+      padding-bottom: 22px;
+      margin-bottom: 28px;
+    }
+    .ornament { margin-bottom: 12px; font-size: 11px; }
+    .badge-online { margin-top: 12px; padding: 5px 12px; font-size: 9px; }
+    .version-tag { margin-top: 8px; }
+    .api-banner { padding: 20px 22px; }
   }
 
   @media (display-mode: standalone) {
     body { padding-top: max(var(--safe-top), 16px); }
-    .container { padding-top: 24px; }
+    .container { padding-top: 20px; }
   }
 </style>
 </head>
@@ -1028,10 +1060,7 @@
     </div>
   </div>
 
-  <div class="settings-bar">
-    <button class="settings-link" id="settingsBtn">Impostazioni API</button>
-  </div>
-
+  <!-- Banner di setup iniziale: visibile SOLO al primo accesso, prima di salvare la chiave -->
   <div class="api-banner" id="apiBanner">
     <div class="api-banner-title">Configurazione API Anthropic</div>
     <div class="api-banner-text">
@@ -1080,6 +1109,11 @@
     <div id="historyContent"></div>
   </div>
 
+  <!-- Pulsante impostazioni API: in fondo, discreto, accessibile solo quando serve cambiare chiave -->
+  <div class="settings-bar">
+    <button class="settings-link" id="settingsBtn">⚙ Impostazioni API</button>
+  </div>
+
   <footer>
     <em>In Vino Veritas</em>
     Sommelier Digitale · Anno MMXXVI
@@ -1095,7 +1129,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-005';
+  const APP_VERSION = '2026.05.09-007';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
@@ -1694,6 +1728,7 @@ Regole:
       : '';
 
     resultDiv.innerHTML = `
+      <button class="result-close" id="resultCloseBtn" aria-label="Chiudi"></button>
       <div class="wine-header">
         ${d.producer ? `<div class="wine-producer">${escapeHTML(d.producer)}</div>` : ''}
         <div class="wine-name">${escapeHTML(d.wineName || 'Vino')}</div>
@@ -1714,8 +1749,22 @@ Regole:
       </div>
     `;
     document.getElementById('newScanBtn').addEventListener('click', () => resetBtn.click());
+    document.getElementById('resultCloseBtn').addEventListener('click', closeResult);
     resultDiv.style.display = 'block';
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Chiude la scheda dei risultati e riporta l'utente all'uploader,
+  // scrollando verso l'alto in modo fluido.
+  function closeResult() {
+    resultDiv.style.display = 'none';
+    resultDiv.innerHTML = '';
+    preview.style.display = 'none';
+    uploaderWrap.style.display = 'block';
+    fileInput.value = '';
+    currentImageData = null;
+    hideError();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function loadHistory() {

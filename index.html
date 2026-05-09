@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-017">
+<meta name="app-version" content="2026.05.09-018">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -443,12 +443,14 @@
   /* ===== RESULT ===== */
   .result {
     display: none;
-    background: white;
+    background: rgba(255, 252, 244, 0.92);
     border: 1px solid var(--rule);
     padding: 56px;
     margin-bottom: 32px;
     position: relative;
     animation: fadeInUp 0.6s ease-out;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
   .result::before {
     content: '';
@@ -668,14 +670,14 @@
     font-size: 9px;
     color: var(--ink-mute);
     letter-spacing: 0.1em;
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .quality-notes {
-    margin-top: 14px !important;
+    margin-top: 28px !important;
     font-size: 14px !important;
     font-style: italic;
     color: var(--ink-soft);
-    line-height: 1.55;
+    line-height: 1.6;
   }
 
   /* ===== CERTIFICATION ===== */
@@ -990,19 +992,23 @@
     gap: 14px;
   }
   .history-card {
-    background: white;
+    background: rgba(255, 252, 244, 0.85);
     border: 1px solid var(--rule);
     transition: all 0.25s ease;
     position: relative;
     overflow: hidden;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
   .history-card:hover {
     border-color: var(--bordeaux);
-    box-shadow: 0 8px 24px rgba(74, 18, 25, 0.06);
+    box-shadow: 0 8px 24px rgba(74, 18, 25, 0.08);
+    background: rgba(255, 252, 244, 0.95);
   }
   .history-card.open {
     border-color: var(--bordeaux);
-    box-shadow: 0 12px 32px rgba(74, 18, 25, 0.1);
+    box-shadow: 0 12px 32px rgba(74, 18, 25, 0.12);
+    background: rgba(255, 252, 244, 0.92);
   }
   .history-card-summary {
     display: flex;
@@ -1053,7 +1059,7 @@
   .history-card-expanded {
     padding: 24px 28px 32px;
     border-top: 1px solid var(--rule);
-    background: var(--paper);
+    background: rgba(240, 228, 206, 0.5);
     animation: expandIn 0.35s ease-out;
   }
   @keyframes expandIn {
@@ -1239,7 +1245,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-017';
+  const APP_VERSION = '2026.05.09-018';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;

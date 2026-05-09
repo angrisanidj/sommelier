@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-003">
+<meta name="app-version" content="2026.05.09-005">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -529,7 +529,207 @@
     color: var(--gold);
   }
 
+  /* ===== QUALITY INDICATOR ===== */
+  .quality-block {
+    background: var(--cream);
+    padding: 24px 28px;
+    border-left: 3px solid var(--gold);
+  }
+  .quality-score-wrap {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .quality-score {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 56px;
+    font-weight: 600;
+    color: var(--bordeaux-deep);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .quality-score-max {
+    font-size: 22px;
+    color: var(--ink-mute);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .quality-label {
+    font-family: 'Spectral', serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-weight: 500;
+  }
+  .quality-label.q-exceptional { color: #6b1820; }
+  .quality-label.q-excellent { color: var(--bordeaux); }
+  .quality-label.q-very-good { color: var(--gold); }
+  .quality-label.q-good { color: var(--ink-soft); }
+  .quality-label.q-acceptable { color: var(--ink-mute); }
+  .quality-bar {
+    position: relative;
+    height: 6px;
+    background: rgba(74, 18, 25, 0.08);
+    margin-bottom: 8px;
+  }
+  .quality-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .quality-bar-fill.q-exceptional { background: linear-gradient(90deg, var(--gold), var(--bordeaux-deep)); }
+  .quality-bar-fill.q-excellent { background: linear-gradient(90deg, var(--gold-soft), var(--bordeaux)); }
+  .quality-bar-fill.q-very-good { background: var(--gold); }
+  .quality-bar-fill.q-good { background: var(--gold-soft); }
+  .quality-bar-fill.q-acceptable { background: var(--rule); }
+  .quality-bar-marks {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Spectral', serif;
+    font-size: 9px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+  .quality-notes {
+    margin-top: 14px !important;
+    font-size: 14px !important;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  /* ===== CERTIFICATION ===== */
+  .cert-block {
+    padding: 22px 26px;
+    border-left: 3px solid var(--gold);
+  }
+  .cert-block.cert-bio { background: #f0f5e8; border-left-color: #6b8e3d; }
+  .cert-block.cert-biodynamic { background: #f5f0e0; border-left-color: #b8924a; }
+  .cert-block.cert-converting { background: #f4f7eb; border-left-color: #95a85a; }
+  .cert-block.cert-sustainable { background: #eff3ed; border-left-color: #5a8a6a; }
+  .cert-block.cert-conventional { background: var(--cream); border-left-color: var(--rule); }
+  .cert-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .cert-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+  .cert-label {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    color: var(--bordeaux-deep);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .cert-details {
+    font-family: 'Spectral', serif;
+    font-size: 15px !important;
+    color: var(--ink) !important;
+    margin-bottom: 10px !important;
+  }
+  .cert-definition {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px !important;
+    color: var(--ink-soft) !important;
+    line-height: 1.55 !important;
+    margin-bottom: 0 !important;
+    padding-top: 10px;
+    border-top: 1px dotted var(--rule);
+  }
+  .cert-definition em { font-style: italic; }
+
+  /* ===== BEST VINTAGES ===== */
+  .vintages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .vintage-card {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .vintage-card.vintage-current {
+    background: var(--bordeaux);
+    color: var(--cream);
+    border-color: var(--gold);
+  }
+  .vintage-card.vintage-current::before {
+    content: 'la tua';
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-family: 'Spectral', serif;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold-soft);
+    font-style: italic;
+  }
+  .vintage-year {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    color: var(--bordeaux-deep);
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .vintage-card.vintage-current .vintage-year { color: var(--cream); }
+  .vintage-rating {
+    font-family: 'Spectral', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .vintage-card.vintage-current .vintage-rating { color: var(--gold-soft); }
+  .vintage-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .vintage-card.vintage-current .vintage-note { color: var(--cream-soft); }
+
   /* ===== MAP ===== */
+  .map-precision {
+    display: inline-block;
+    font-family: 'Spectral', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    padding: 5px 12px;
+    margin-bottom: 10px;
+  }
+  .precision-cantina {
+    background: var(--bordeaux);
+    color: var(--cream);
+  }
+  .precision-zona {
+    background: var(--cream);
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+  }
+  .map-address {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px !important;
+    color: var(--ink-soft) !important;
+    margin-bottom: 12px !important;
+  }
   .map-container {
     width: 100%;
     height: 360px;
@@ -895,7 +1095,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-003';
+  const APP_VERSION = '2026.05.09-005';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
@@ -962,7 +1162,8 @@
   // ============================================================
   const STORAGE_KEY = 'sommelier_history_v2';
   const APIKEY_STORAGE = 'sommelier_apikey_v1';
-  const MODEL = 'claude-sonnet-4-5-20250929';
+  const MODEL_VISION = 'claude-sonnet-4-5-20250929';   // Fase 1: riconoscimento etichetta (qualità visiva critica)
+  const MODEL_RESEARCH = 'claude-haiku-4-5-20251001';  // Fase 2: arricchimento web (formattazione di dati di ricerca, ~5x più economico)
 
   const fileInput = document.getElementById('fileInput');
   const uploader = document.getElementById('uploader');
@@ -1048,7 +1249,7 @@
       return;
     }
     hideError();
-    resizeImage(file, 1600).then(({ data, mediaType }) => {
+    resizeImage(file, 1024).then(({ data, mediaType }) => {
       previewImg.src = 'data:' + mediaType + ';base64,' + data;
       currentImageData = data;
       currentMediaType = mediaType;
@@ -1068,20 +1269,19 @@
         const img = new Image();
         img.onload = () => {
           let { width, height } = img;
-          if (width <= maxDim && height <= maxDim) {
-            const dataUrl = e.target.result;
-            resolve({ data: dataUrl.split(',')[1], mediaType: file.type });
-            return;
+          // Se l'immagine è più piccola del target, mantieni dimensioni originali ma ricomprimi a JPEG 0.82
+          // per uniformare il bitrate e ridurre i token sull'API.
+          if (width > maxDim || height > maxDim) {
+            const ratio = Math.min(maxDim / width, maxDim / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
           }
-          const ratio = Math.min(maxDim / width, maxDim / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
           const canvas = document.createElement('canvas');
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
-          const out = canvas.toDataURL('image/jpeg', 0.88);
+          const out = canvas.toDataURL('image/jpeg', 0.82);
           resolve({ data: out.split(',')[1], mediaType: 'image/jpeg' });
         };
         img.onerror = reject;
@@ -1124,6 +1324,22 @@
         throw new Error(identification?.reason || "Non sono riuscito a leggere l'etichetta. Prova con una foto più nitida o frontale.");
       }
 
+      // ============================================================
+      //  CACHE HIT: se questo vino è già stato scansionato (stessa
+      //  combinazione produttore + nome + annata), riusa la scheda
+      //  esistente senza fare la chiamata di arricchimento.
+      //  Risparmio: 100% del costo della fase 2 sulle ri-scansioni.
+      // ============================================================
+      const cached = findInHistory(identification);
+      if (cached) {
+        loaderText.textContent = 'Vino già nella cantina personale…';
+        loaderStep.textContent = 'Recupero scheda esistente';
+        // Piccola pausa per dare feedback visivo all'utente
+        await new Promise(r => setTimeout(r, 500));
+        renderResult(cached);
+        return;
+      }
+
       loaderText.textContent = 'Ricerca informazioni dettagliate sul web…';
       loaderStep.textContent = 'Fase 2 di 2 — Documentazione';
 
@@ -1142,86 +1358,135 @@
     }
   }
 
+  // Confronto fuzzy per identificare lo stesso vino già in cantina
+  function findInHistory(id) {
+    const h = loadHistory();
+    if (!h.length) return null;
+    const norm = s => (s || '').toString().toLowerCase().trim().replace(/\s+/g, ' ');
+    const targetProducer = norm(id.producer);
+    const targetName = norm(id.wineName);
+    const targetVintage = norm(id.vintage);
+    if (!targetProducer || !targetName) return null;
+    for (const item of h) {
+      if (norm(item.producer) === targetProducer &&
+          norm(item.wineName) === targetName &&
+          norm(item.vintage) === targetVintage &&
+          item._full) {
+        return item._full;
+      }
+    }
+    return null;
+  }
+
   async function identifyWine() {
-    const prompt = `Sei un sommelier esperto. Esamina questa foto di una bottiglia di vino e identifica il vino dall'etichetta con la massima precisione possibile.
-
-Rispondi ESCLUSIVAMENTE con un oggetto JSON valido (nessun testo prima o dopo, nessun markdown, nessun blocco di codice), secondo questa struttura:
-{
-  "recognized": true/false,
-  "reason": "se recognized=false, spiega brevemente in italiano perché",
-  "producer": "nome del produttore/cantina (es. 'Antinori', 'Château Margaux')",
-  "wineName": "nome specifico del vino o denominazione principale",
-  "vintage": "annata se leggibile (numero di 4 cifre), altrimenti null",
-  "denomination": "DOC/DOCG/IGT/AOC/DO/DOCa se visibile, altrimenti null",
-  "country": "paese in italiano",
-  "region": "regione/area vitivinicola in italiano",
-  "confidence": "alta/media/bassa"
-}
-
-Se l'immagine non contiene una bottiglia di vino o l'etichetta è completamente illeggibile, restituisci recognized=false con la ragione.`;
+    // Sistema instructions cacheabili (cache_control) - identiche tra scansioni
+    // Schema con chiavi compatte per ridurre token output, riespanse poi nel renderer.
+    const systemInstructions = `Sei un sommelier esperto. Identifica il vino dall'etichetta nella foto.
+Rispondi SOLO con JSON valido (no markdown, no testo extra), schema:
+{"r":bool,"e":"se r=false motivo IT","p":"produttore","n":"nome vino/denominazione","y":"annata 4 cifre o null","d":"DOC/DOCG/IGT/AOC/DO/DOCa o null","c":"paese IT","g":"regione IT","f":"alta/media/bassa"}
+Se non è una bottiglia di vino o etichetta illeggibile: r=false con motivo.`;
 
     const response = await callAPI({
-      model: MODEL,
-      max_tokens: 800,
+      model: MODEL_VISION,
+      max_tokens: 500,
+      system: [
+        { type: 'text', text: systemInstructions, cache_control: { type: 'ephemeral' } }
+      ],
       messages: [{
         role: 'user',
         content: [
-          { type: 'image', source: { type: 'base64', media_type: currentMediaType, data: currentImageData } },
-          { type: 'text', text: prompt }
+          { type: 'image', source: { type: 'base64', media_type: currentMediaType, data: currentImageData } }
         ]
       }]
     });
 
     const text = extractText(response);
-    return parseJSON(text);
+    const compact = parseJSON(text);
+    // Riespando le chiavi per il resto del codice
+    return {
+      recognized: compact.r,
+      reason: compact.e,
+      producer: compact.p,
+      wineName: compact.n,
+      vintage: compact.y,
+      denomination: compact.d,
+      country: compact.c,
+      region: compact.g,
+      confidence: compact.f
+    };
   }
 
   async function fetchWineDetails(id) {
     const wineQuery = [id.producer, id.wineName, id.vintage, id.denomination].filter(Boolean).join(' ');
 
-    const prompt = `Sei un sommelier professionista. Cerca sul web informazioni accurate e attuali sul seguente vino e produci una scheda completa in italiano.
+    // System istruzioni cacheabili: identiche tra scansioni, scontate del 90% dalla 2a in poi
+    const systemInstructions = `Sei un sommelier professionista. Cerca info su un vino con web_search e rispondi SOLO con JSON valido (no markdown).
 
-VINO DA RICERCARE: ${wineQuery}
-Paese: ${id.country || 'sconosciuto'}
-Regione: ${id.region || 'sconosciuta'}
-
-Usa la web_search per verificare e arricchire le informazioni con fonti affidabili: sito ufficiale del produttore, guide vinicole (Gambero Rosso, Slow Food, Vinous, Wine Spectator), riviste specializzate, Wikipedia, consorzi di tutela.
-
-Dopo aver completato le ricerche, rispondi ESCLUSIVAMENTE con un oggetto JSON valido (nessun markdown, nessun testo aggiuntivo, nessun blocco di codice), secondo questa struttura ESATTA:
+Schema (chiavi compatte, tutto in IT eccetto nomi propri):
 {
-  "type": "tipologia (es. 'Rosso fermo', 'Bianco fermo', 'Spumante metodo classico', 'Passito')",
-  "grapes": ["array di vitigni"],
-  "alcohol": "gradazione alcolica (es. '13.5%') o null",
-  "tastingNotes": "note di degustazione in 2-4 frasi in italiano: aspetto visivo, naso (profumi), palato (gusto e finale)",
-  "pairings": ["lista di 3-5 abbinamenti gastronomici"],
-  "servingTemp": "temperatura di servizio consigliata (es. '16-18°C') o null",
-  "agingPotential": "potenziale di invecchiamento (es. '5-10 anni dalla vendemmia') o null",
-  "history": "breve nota in 2-3 frasi sulla storia della cantina e/o del vino specifico",
-  "vineyardLocation": {
-    "name": "nome del comune o zona vitivinicola dove si trovano i vigneti",
-    "lat": numero_decimale_latitudine,
-    "lng": numero_decimale_longitudine
-  },
-  "sources": [
-    {"title": "titolo della fonte", "url": "url completo"}
-  ]
+"t":"tipologia (Rosso fermo/Bianco fermo/Spumante metodo classico/Passito/...)",
+"gr":["vitigni"],
+"al":"gradazione (es '13.5%') o null",
+"tn":"note degustazione 2-4 frasi: aspetto, naso, palato",
+"pa":["3-5 abbinamenti"],
+"st":"temperatura servizio (es '16-18°C') o null",
+"ag":"invecchiamento (es '5-10 anni') o null",
+"hi":"2-3 frasi storia cantina/vino",
+"qs":int 70-100,
+"qn":"1-2 frasi: punteggi guide consultate (WS/Suckling/Vinous/GR), reputazione, riconoscimenti",
+"ce":{"t":"biologico|biodinamico|in conversione|sostenibile|convenzionale|sconosciuto","d":"1-2 frasi dettagli (es 'Cert ICEA dal 2015')"},
+"bv":[{"y":"anno","r":"eccellente|ottimo|buono","n":"breve nota clima/stile"}],
+"vl":{"pl":"cantina|zona","n":"nome tenuta o comune","ad":"indirizzo se pl=cantina, else null","la":lat_decimale,"lg":lng_decimale},
+"so":[{"t":"titolo","u":"url"}]
 }
 
-REGOLE IMPORTANTI:
-- Se un campo non è disponibile dalle fonti, usa null (mai inventare).
-- Includi 2-4 fonti citate effettivamente consultate.
-- Le coordinate possono essere quelle del comune principale di produzione anche se approssimative.
-- Tutto in italiano, eccetto i nomi propri e i toponimi.`;
+Fonti privilegiate: sito ufficiale produttore, Gambero Rosso, Slow Food, Vinous, Wine Spectator, James Suckling, Decanter, Wikipedia, consorzi tutela, ICEA/Demeter.
+
+Regole:
+- Se un campo non è verificabile: null (mai inventare).
+- so: 2-4 fonti effettivamente consultate.
+- qs: media punteggi reali se trovati (WS/Suckling/Vinous), altrimenti stima da reputazione. 70-79=accettabile, 80-84=buono, 85-89=ottimo, 90-94=eccellente, 95-100=eccezionale.
+- ce: solo se certificazione documentata in fonti, altrimenti t='sconosciuto'.
+- bv: 3-5 annate eccellenti ultimi 10-15 anni per la denominazione.
+- vl.pl='cantina' SOLO con indirizzo certo da fonte ufficiale; in dubbio usa 'zona'.`;
+
+    const userPrompt = `Vino: ${wineQuery}\nPaese: ${id.country || '?'}\nRegione: ${id.region || '?'}`;
 
     const response = await callAPI({
-      model: MODEL,
+      model: MODEL_RESEARCH,
       max_tokens: 2500,
-      messages: [{ role: 'user', content: prompt }],
-      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }]
+      system: [
+        { type: 'text', text: systemInstructions, cache_control: { type: 'ephemeral' } }
+      ],
+      messages: [{ role: 'user', content: userPrompt }],
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 4 }]
     });
 
     const text = extractText(response);
-    return parseJSON(text);
+    const c = parseJSON(text);
+    // Riespando le chiavi compatte allo schema usato dal renderer
+    return {
+      type: c.t,
+      grapes: c.gr,
+      alcohol: c.al,
+      tastingNotes: c.tn,
+      pairings: c.pa,
+      servingTemp: c.st,
+      agingPotential: c.ag,
+      history: c.hi,
+      qualityScore: c.qs,
+      qualityNotes: c.qn,
+      certification: c.ce ? { type: c.ce.t, details: c.ce.d } : null,
+      bestVintages: c.bv ? c.bv.map(v => ({ year: v.y, rating: v.r, note: v.n })) : null,
+      vineyardLocation: c.vl ? {
+        precisionLevel: c.vl.pl,
+        name: c.vl.n,
+        address: c.vl.ad,
+        lat: c.vl.la,
+        lng: c.vl.lg
+      } : null,
+      sources: c.so ? c.so.map(s => ({ title: s.t, url: s.u })) : null
+    };
   }
 
   async function callAPI(body) {
@@ -1284,6 +1549,103 @@ REGOLE IMPORTANTI:
       `<div class="wine-fact"><div class="wine-fact-label">${escapeHTML(l)}</div><div class="wine-fact-value">${escapeHTML(v)}</div></div>`
     ).join('');
 
+    // ===== INDICATORE DI QUALITÀ =====
+    let qualityHTML = '';
+    if (typeof d.qualityScore === 'number' && d.qualityScore >= 70) {
+      const score = Math.min(100, Math.max(70, d.qualityScore));
+      const pct = ((score - 70) / 30) * 100;
+      let label = 'Accettabile';
+      let scoreClass = 'q-acceptable';
+      if (score >= 95) { label = 'Eccezionale'; scoreClass = 'q-exceptional'; }
+      else if (score >= 90) { label = 'Eccellente'; scoreClass = 'q-excellent'; }
+      else if (score >= 85) { label = 'Ottimo'; scoreClass = 'q-very-good'; }
+      else if (score >= 80) { label = 'Buono'; scoreClass = 'q-good'; }
+      qualityHTML = `<div class="section">
+        <div class="section-title">Qualità</div>
+        <div class="quality-block">
+          <div class="quality-score-wrap">
+            <div class="quality-score ${scoreClass}">${score}<span class="quality-score-max">/100</span></div>
+            <div class="quality-label ${scoreClass}">${label}</div>
+          </div>
+          <div class="quality-bar">
+            <div class="quality-bar-fill ${scoreClass}" style="width: ${pct}%"></div>
+            <div class="quality-bar-marks">
+              <span>70</span><span>80</span><span>90</span><span>100</span>
+            </div>
+          </div>
+          ${d.qualityNotes ? `<p class="quality-notes">${escapeHTML(d.qualityNotes)}</p>` : ''}
+        </div>
+      </div>`;
+    }
+
+    // ===== CERTIFICAZIONE (BIO/BIODINAMICO/SOSTENIBILE) =====
+    let certHTML = '';
+    if (d.certification && d.certification.type && d.certification.type !== 'sconosciuto') {
+      const certInfo = {
+        'biologico': {
+          icon: '🌿',
+          label: 'Biologico',
+          color: 'cert-bio',
+          definition: 'Coltivazione senza pesticidi né fertilizzanti chimici di sintesi. Lieviti consentiti, solfiti limitati. Certificazione UE sotto regolamento 834/2007.'
+        },
+        'biodinamico': {
+          icon: '☘️',
+          label: 'Biodinamico',
+          color: 'cert-biodynamic',
+          definition: 'Approccio olistico che considera la vigna come ecosistema vivo. Segue i princìpi di Rudolf Steiner: preparati naturali, calendario lunare, rispetto delle fasi astrali. Certificazione Demeter.'
+        },
+        'in conversione': {
+          icon: '🌱',
+          label: 'In conversione',
+          color: 'cert-converting',
+          definition: 'Periodo di transizione (3 anni) durante il quale i vigneti adottano pratiche biologiche/biodinamiche prima di ottenere la certificazione formale.'
+        },
+        'sostenibile': {
+          icon: '♻️',
+          label: 'Sostenibile',
+          color: 'cert-sustainable',
+          definition: 'Pratiche viticole a basso impatto ambientale (riduzione fitofarmaci, gestione idrica, biodiversità) ma senza certificazione biologica formale. Spesso certificato Equalitas o VIVA.'
+        },
+        'convenzionale': {
+          icon: '○',
+          label: 'Convenzionale',
+          color: 'cert-conventional',
+          definition: 'Viticoltura tradizionale, può prevedere uso controllato di prodotti fitosanitari di sintesi nel rispetto delle normative UE.'
+        }
+      };
+      const info = certInfo[d.certification.type] || null;
+      if (info) {
+        certHTML = `<div class="section">
+          <div class="section-title">Certificazione</div>
+          <div class="cert-block ${info.color}">
+            <div class="cert-header">
+              <span class="cert-icon">${info.icon}</span>
+              <span class="cert-label">${info.label}</span>
+            </div>
+            ${d.certification.details ? `<p class="cert-details">${escapeHTML(d.certification.details)}</p>` : ''}
+            <p class="cert-definition"><em>${info.definition}</em></p>
+          </div>
+        </div>`;
+      }
+    }
+
+    // ===== ANNATE MIGLIORI =====
+    let vintagesHTML = '';
+    if (d.bestVintages && d.bestVintages.length) {
+      vintagesHTML = `<div class="section">
+        <div class="section-title">Annate Migliori</div>
+        <div class="vintages-grid">
+          ${d.bestVintages.map(v => `
+            <div class="vintage-card${d.vintage && String(d.vintage) === String(v.year) ? ' vintage-current' : ''}">
+              <div class="vintage-year">${escapeHTML(String(v.year || ''))}</div>
+              ${v.rating ? `<div class="vintage-rating">${escapeHTML(v.rating)}</div>` : ''}
+              ${v.note ? `<div class="vintage-note">${escapeHTML(v.note)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+
     const tastingHTML = d.tastingNotes
       ? `<div class="section"><div class="section-title">Note di Degustazione</div><p>${escapeHTML(d.tastingNotes)}</p></div>`
       : '';
@@ -1296,15 +1658,27 @@ REGOLE IMPORTANTI:
       ? `<div class="section"><div class="section-title">Storia &amp; Cantina</div><p>${escapeHTML(d.history)}</p></div>`
       : '';
 
+    // ===== MAPPA CON LIVELLO DI PRECISIONE =====
     let mapHTML = '';
     if (d.vineyardLocation && d.vineyardLocation.lat && d.vineyardLocation.lng) {
-      const { lat, lng, name } = d.vineyardLocation;
-      const bbox = `${lng - 0.12},${lat - 0.06},${lng + 0.12},${lat + 0.06}`;
+      const { lat, lng, name, precisionLevel, address } = d.vineyardLocation;
+      // Zoom maggiore (bbox più stretto) se abbiamo l'indirizzo della cantina
+      const isPrecise = precisionLevel === 'cantina';
+      const zoomDelta = isPrecise ? 0.025 : 0.12;
+      const zoomDeltaLat = isPrecise ? 0.012 : 0.06;
+      const bbox = `${lng - zoomDelta},${lat - zoomDeltaLat},${lng + zoomDelta},${lat + zoomDeltaLat}`;
       const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
+      const mapZoom = isPrecise ? 15 : 11;
+      const sectionLabel = isPrecise ? 'Cantina' : 'Territorio';
+      const precisionBadge = isPrecise
+        ? '<span class="map-precision precision-cantina">📍 Indirizzo cantina</span>'
+        : '<span class="map-precision precision-zona">⊙ Area vitivinicola</span>';
       mapHTML = `<div class="section">
-        <div class="section-title">Territorio${name ? ' — ' + escapeHTML(name) : ''}</div>
-        <iframe class="map-container" src="${mapUrl}" loading="lazy" title="Mappa vigneti"></iframe>
-        <a class="map-link" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=11/${lat}/${lng}" target="_blank" rel="noopener">Apri mappa estesa →</a>
+        <div class="section-title">${sectionLabel}${name ? ' — ' + escapeHTML(name) : ''}</div>
+        ${precisionBadge}
+        ${isPrecise && address ? `<p class="map-address">${escapeHTML(address)}</p>` : ''}
+        <iframe class="map-container" src="${mapUrl}" loading="lazy" title="Mappa"></iframe>
+        <a class="map-link" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=${mapZoom}/${lat}/${lng}" target="_blank" rel="noopener">Apri mappa estesa →</a>
       </div>`;
     }
 
@@ -1327,8 +1701,11 @@ REGOLE IMPORTANTI:
         ${confidenceHTML}
       </div>
       ${facts.length ? `<div class="wine-grid">${factsHTML}</div>` : ''}
+      ${qualityHTML}
       ${tastingHTML}
       ${pairingsHTML}
+      ${certHTML}
+      ${vintagesHTML}
       ${historyHTML}
       ${mapHTML}
       ${sourcesHTML}

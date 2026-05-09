@@ -3,13 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+
+<!-- ===== ANTI-CACHE: forza il download della versione più recente ad ogni apertura ===== -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <title>Sommelier — Riconoscimento ed Enciclopedia del Vino</title>
 
 <!-- ==================================================================== -->
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-002">
+<meta name="app-version" content="2026.05.09-003">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -89,75 +95,6 @@
     position: relative;
     z-index: 2;
   }
-
-  /* ===== UPDATE NOTIFICATION BANNER ===== */
-  .update-banner {
-    position: fixed;
-    top: var(--safe-top);
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, var(--bordeaux), var(--bordeaux-deep));
-    color: var(--cream);
-    padding: 14px 20px;
-    z-index: 100;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    box-shadow: 0 4px 20px rgba(74, 18, 25, 0.3);
-    animation: slideDown 0.4s ease-out;
-    flex-wrap: wrap;
-  }
-  @keyframes slideDown {
-    from { transform: translateY(-100%); }
-    to { transform: translateY(0); }
-  }
-  .update-banner.show { display: flex; }
-  .update-banner-content {
-    flex: 1;
-    min-width: 200px;
-  }
-  .update-banner-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--gold-soft);
-    margin-bottom: 2px;
-  }
-  .update-banner-text {
-    font-family: 'Spectral', serif;
-    font-size: 12px;
-    opacity: 0.92;
-  }
-  .update-banner-actions {
-    display: flex;
-    gap: 8px;
-  }
-  .update-btn {
-    background: var(--gold);
-    color: var(--bordeaux-deep);
-    border: none;
-    padding: 9px 18px;
-    font-family: 'Spectral', serif;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  .update-btn:hover { background: var(--gold-soft); }
-  .update-dismiss {
-    background: transparent;
-    color: var(--cream);
-    border: 1px solid rgba(244, 237, 226, 0.3);
-    padding: 9px 14px;
-    cursor: pointer;
-    font-family: 'Spectral', serif;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-  .update-dismiss:hover { border-color: var(--cream); }
 
   /* ===== HEADER ===== */
   header {
@@ -873,18 +810,6 @@
 </head>
 <body>
 
-<!-- ===== UPDATE NOTIFICATION BANNER ===== -->
-<div class="update-banner" id="updateBanner">
-  <div class="update-banner-content">
-    <div class="update-banner-title">Nuova versione disponibile</div>
-    <div class="update-banner-text">Ricarica per applicare l'aggiornamento.</div>
-  </div>
-  <div class="update-banner-actions">
-    <button class="update-btn" id="updateApply">Aggiorna</button>
-    <button class="update-dismiss" id="updateDismiss">Più tardi</button>
-  </div>
-</div>
-
 <div class="container">
 
   <header>
@@ -967,153 +892,46 @@
 
   // ============================================================
   //  VERSIONE APPLICAZIONE
-  //  Modificare questa costante ad ogni rilascio per innescare
-  //  l'aggiornamento automatico sui dispositivi degli utenti.
+  //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-002';
-  const CACHE_PREFIX = 'sommelier-cache-';
-  const CACHE_NAME = CACHE_PREFIX + APP_VERSION;
+  const APP_VERSION = '2026.05.09-003';
 
-  // Mostra la versione nel footer del titolo
+  // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
 
   // ============================================================
-  //  SERVICE WORKER CON VERSIONING AUTOMATICO
-  //  Strategia: network-first per il documento HTML principale
-  //  (così l'aggiornamento viene rilevato all'avvio), cache-first
-  //  per gli asset statici (font, immagini) per la velocità.
-  //  Le cache di versioni precedenti vengono eliminate all'attivazione.
+  //  STRATEGIA ANTI-CACHE
+  //  Niente service worker (incompatibilità Safari iOS con Blob URL).
+  //  I meta-tag Cache-Control nell'HTML, combinati con il reload
+  //  forzato al ritorno in primo piano, garantiscono che l'utente
+  //  veda sempre l'ultima versione pubblicata su GitHub Pages.
+  //  Se rileviamo un service worker registrato in versioni precedenti,
+  //  lo deregistriamo e cancelliamo le cache vecchie.
   // ============================================================
-  let updateAvailable = false;
-
   if ('serviceWorker' in navigator) {
-    const swCode = `
-      const APP_VERSION = '${APP_VERSION}';
-      const CACHE_PREFIX = '${CACHE_PREFIX}';
-      const CACHE_NAME = CACHE_PREFIX + APP_VERSION;
-
-      // Installazione: forza l'attivazione immediata della nuova versione
-      self.addEventListener('install', event => {
-        self.skipWaiting();
-      });
-
-      // Attivazione: pulisce le cache delle versioni precedenti
-      self.addEventListener('activate', event => {
-        event.waitUntil(
-          caches.keys().then(keys => Promise.all(
-            keys.filter(k => k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME)
-                .map(k => caches.delete(k))
-          )).then(() => self.clients.claim())
-        );
-      });
-
-      // Strategia di fetch
-      self.addEventListener('fetch', event => {
-        const req = event.request;
-        const url = new URL(req.url);
-
-        // Mai mettere in cache: API Anthropic, OSM tiles, metodi non-GET
-        if (req.method !== 'GET') return;
-        if (url.hostname === 'api.anthropic.com') return;
-        if (url.hostname.includes('openstreetmap')) return;
-        if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
-
-        const isHTML = req.mode === 'navigate' ||
-                       (req.headers.get('accept') || '').includes('text/html');
-
-        if (isHTML) {
-          // NETWORK-FIRST per HTML: garantisce che l'utente veda
-          // sempre la versione più recente quando online.
-          event.respondWith(
-            fetch(req).then(response => {
-              if (response.ok) {
-                const clone = response.clone();
-                caches.open(CACHE_NAME).then(c => c.put(req, clone)).catch(()=>{});
-              }
-              return response;
-            }).catch(() => caches.match(req).then(c => c || caches.match('./')))
-          );
-        } else {
-          // CACHE-FIRST per asset statici (font, immagini): velocità massima.
-          event.respondWith(
-            caches.match(req).then(cached => {
-              if (cached) return cached;
-              return fetch(req).then(response => {
-                if (response.ok) {
-                  const clone = response.clone();
-                  caches.open(CACHE_NAME).then(c => c.put(req, clone)).catch(()=>{});
-                }
-                return response;
-              });
-            })
-          );
-        }
-      });
-
-      // Comunicazione bidirezionale con la pagina
-      self.addEventListener('message', event => {
-        if (event.data && event.data.type === 'SKIP_WAITING') {
-          self.skipWaiting();
-        }
-        if (event.data && event.data.type === 'GET_VERSION') {
-          event.ports[0].postMessage({ version: APP_VERSION });
-        }
-      });
-    `;
-    const blob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-
-    navigator.serviceWorker.register(swUrl).then(registration => {
-      // Controllo aggiornamenti periodico (ogni volta che la pagina riprende focus)
-      registration.update();
-
-      // Rileva quando un nuovo service worker è in attesa
-      registration.addEventListener('updatefound', () => {
-        const newWorker = registration.installing;
-        if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // C'è una versione nuova in attesa di attivazione
-              updateAvailable = true;
-              showUpdateBanner();
-            }
-          });
-        }
-      });
-
-      // Quando l'utente accetta l'update, ricarica
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (updateAvailable) window.location.reload();
-      });
-
-      // Verifica aggiornamenti quando l'app torna in primo piano
-      // (utile per PWA installate su iPhone)
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          registration.update().catch(() => {});
-        }
-      });
-    }).catch(err => console.warn('SW registration failed:', err));
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(r => r.unregister());
+    }).catch(() => {});
+    if ('caches' in window) {
+      caches.keys().then(keys => {
+        keys.forEach(k => caches.delete(k));
+      }).catch(() => {});
+    }
   }
 
-  function showUpdateBanner() {
-    const banner = document.getElementById('updateBanner');
-    if (banner) banner.classList.add('show');
-  }
-
-  document.getElementById('updateApply').addEventListener('click', () => {
-    navigator.serviceWorker.getRegistration().then(registration => {
-      if (registration && registration.waiting) {
-        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-      } else {
+  // Reload automatico quando l'app torna in primo piano dopo
+  // essere stata in background per più di 5 minuti (utile per PWA su iOS)
+  let lastHiddenAt = 0;
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      lastHiddenAt = Date.now();
+    } else if (document.visibilityState === 'visible' && lastHiddenAt > 0) {
+      const elapsed = Date.now() - lastHiddenAt;
+      if (elapsed > 5 * 60 * 1000) {
         window.location.reload();
       }
-    });
-  });
-
-  document.getElementById('updateDismiss').addEventListener('click', () => {
-    document.getElementById('updateBanner').classList.remove('show');
+    }
   });
 
   // ===== iOS install prompt =====

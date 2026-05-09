@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-007">
+<meta name="app-version" content="2026.05.09-008">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -1129,7 +1129,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-007';
+  const APP_VERSION = '2026.05.09-008';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
@@ -1461,7 +1461,7 @@ Schema (chiavi compatte, tutto in IT eccetto nomi propri):
 "t":"tipologia (Rosso fermo/Bianco fermo/Spumante metodo classico/Passito/...)",
 "gr":["vitigni"],
 "al":"gradazione (es '13.5%') o null",
-"tn":"note degustazione 2-4 frasi: aspetto, naso, palato",
+"tn":"note degustazione DETTAGLIATE 250-400 caratteri totali, 3-4 frasi: 1) aspetto visivo (colore, riflessi, consistenza), 2) naso (profumi specifici: frutta, fiori, spezie, terziari), 3) palato (gusto, struttura, tannini/acidità, finale)",
 "pa":["3-5 abbinamenti"],
 "st":"temperatura servizio (es '16-18°C') o null",
 "ag":"invecchiamento (es '5-10 anni') o null",
@@ -1481,7 +1481,7 @@ Regole:
 - so: 2-4 fonti effettivamente consultate.
 - qs: media punteggi reali se trovati (WS/Suckling/Vinous), altrimenti stima da reputazione. 70-79=accettabile, 80-84=buono, 85-89=ottimo, 90-94=eccellente, 95-100=eccezionale.
 - ce: solo se certificazione documentata in fonti, altrimenti t='sconosciuto'.
-- bv: 3-5 annate eccellenti ultimi 10-15 anni per la denominazione.
+- bv: 4-5 annate eccellenti ultimi 10-15 anni per la denominazione (minimo 4, mai meno).
 - vl.pl='cantina' SOLO con indirizzo certo da fonte ufficiale; in dubbio usa 'zona'.`;
 
     const userPrompt = `Vino: ${wineQuery}\nPaese: ${id.country || '?'}\nRegione: ${id.region || '?'}`;
@@ -1493,7 +1493,7 @@ Regole:
         { type: 'text', text: systemInstructions, cache_control: { type: 'ephemeral' } }
       ],
       messages: [{ role: 'user', content: userPrompt }],
-      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 4 }]
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }]
     });
 
     const text = extractText(response);

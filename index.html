@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-008">
+<meta name="app-version" content="2026.05.09-010">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -411,20 +411,22 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    width: 36px;
-    height: 36px;
+    height: 32px;
     background: transparent;
     border: 1px solid var(--rule);
     color: var(--ink-mute);
     cursor: pointer;
     font-family: 'Spectral', serif;
-    font-size: 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
     line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     transition: all 0.2s ease;
-    padding: 0;
+    padding: 0 12px;
     z-index: 5;
   }
   .result-close:hover {
@@ -434,6 +436,10 @@
   }
   .result-close::before {
     content: '✕';
+    font-size: 13px;
+  }
+  .result-close::after {
+    content: 'Chiudi';
   }
   .wine-header {
     text-align: center;
@@ -930,21 +936,44 @@
   .history-clear:hover { color: var(--bordeaux); }
   .history-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 18px;
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
   .history-card {
     background: white;
     border: 1px solid var(--rule);
-    padding: 22px;
-    cursor: pointer;
     transition: all 0.25s ease;
     position: relative;
+    overflow: hidden;
   }
   .history-card:hover {
     border-color: var(--bordeaux);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(74, 18, 25, 0.08);
+    box-shadow: 0 8px 24px rgba(74, 18, 25, 0.06);
+  }
+  .history-card.open {
+    border-color: var(--bordeaux);
+    box-shadow: 0 12px 32px rgba(74, 18, 25, 0.1);
+  }
+  .history-card-summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .history-card-chevron {
+    font-size: 14px;
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    width: 16px;
+    text-align: center;
+  }
+  .history-card.open .history-card-chevron { color: var(--bordeaux); }
+  .history-card-info {
+    flex: 1;
+    min-width: 0;
   }
   .history-card-producer {
     font-family: 'Spectral', serif;
@@ -952,21 +981,34 @@
     text-transform: uppercase;
     letter-spacing: 0.3em;
     color: var(--gold);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .history-card-name {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 19px;
     color: var(--bordeaux-deep);
     line-height: 1.2;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .history-card-meta {
     font-size: 13px;
     color: var(--ink-soft);
     font-style: italic;
     font-family: 'Cormorant Garamond', serif;
+  }
+  .history-card-expanded {
+    padding: 24px 28px 32px;
+    border-top: 1px solid var(--rule);
+    background: var(--paper);
+    animation: expandIn 0.35s ease-out;
+  }
+  @keyframes expandIn {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 3000px; }
   }
   .history-empty {
     text-align: center;
@@ -977,23 +1019,31 @@
     font-size: 18px;
   }
   .history-card-delete {
-    position: absolute;
-    top: 8px;
-    right: 8px;
+    flex-shrink: 0;
     background: none;
-    border: none;
+    border: 1px solid transparent;
     color: var(--ink-mute);
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 6px 10px;
     font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.2s;
+    opacity: 0.5;
+    transition: all 0.2s;
+    order: 99;
   }
   .history-card:hover .history-card-delete { opacity: 1; }
-  @media (hover: none) {
-    .history-card-delete { opacity: 0.5; }
+  .history-card-delete:hover {
+    color: var(--cream);
+    background: var(--bordeaux);
+    border-color: var(--bordeaux);
   }
-  .history-card-delete:hover { color: var(--bordeaux); }
+  @media (min-width: 700px) {
+    .history-grid { grid-template-columns: repeat(2, 1fr); }
+    .history-card.open { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1000px) {
+    .history-grid { grid-template-columns: repeat(3, 1fr); }
+    .history-card.open { grid-column: 1 / -1; }
+  }
 
   footer {
     text-align: center;
@@ -1129,7 +1179,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-008';
+  const APP_VERSION = '2026.05.09-010';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
@@ -1470,7 +1520,7 @@ Schema (chiavi compatte, tutto in IT eccetto nomi propri):
 "qn":"1-2 frasi: punteggi guide consultate (WS/Suckling/Vinous/GR), reputazione, riconoscimenti",
 "ce":{"t":"biologico|biodinamico|in conversione|sostenibile|convenzionale|sconosciuto","d":"1-2 frasi dettagli (es 'Cert ICEA dal 2015')"},
 "bv":[{"y":"anno","r":"eccellente|ottimo|buono","n":"breve nota clima/stile"}],
-"vl":{"pl":"cantina|zona","n":"nome tenuta o comune","ad":"indirizzo se pl=cantina, else null","la":lat_decimale,"lg":lng_decimale},
+"vl":{"pl":"cantina|zona","n":"nome tenuta o comune (es. 'Barolo', 'Montalcino', 'Châteauneuf-du-Pape')","ad":"indirizzo postale completo se pl=cantina, else null","la":latitudine_decimale_NORD_positivo_es_44.6177,"lg":longitudine_decimale_EST_positivo_es_11.2744},
 "so":[{"t":"titolo","u":"url"}]
 }
 
@@ -1482,7 +1532,8 @@ Regole:
 - qs: media punteggi reali se trovati (WS/Suckling/Vinous), altrimenti stima da reputazione. 70-79=accettabile, 80-84=buono, 85-89=ottimo, 90-94=eccellente, 95-100=eccezionale.
 - ce: solo se certificazione documentata in fonti, altrimenti t='sconosciuto'.
 - bv: 4-5 annate eccellenti ultimi 10-15 anni per la denominazione (minimo 4, mai meno).
-- vl.pl='cantina' SOLO con indirizzo certo da fonte ufficiale; in dubbio usa 'zona'.`;
+- vl.pl='cantina' SOLO con indirizzo certo da fonte ufficiale; in dubbio usa 'zona'.
+- COORDINATE CRITICO: verifica che lat/lng identifichino un punto sulla TERRAFERMA in una ZONA VITIVINICOLA REALE. NON inventare coordinate. Per Italia: lat 36-47, lng 6-19. Per Francia continentale: lat 42-51, lng -5 a 8. Per Spagna: lat 36-44, lng -10 a 4. Per Germania: lat 47-55, lng 6-15. Se non sei certo delle coordinate esatte, usa quelle del comune principale verificate da Wikipedia/OSM. MAI restituire coordinate in mare, in aree non vitivinicole, o invertite (lng al posto di lat).`;
 
     const userPrompt = `Vino: ${wineQuery}\nPaese: ${id.country || '?'}\nRegione: ${id.region || '?'}`;
 
@@ -1569,7 +1620,99 @@ Regole:
     }
   }
 
-  function renderResult(d) {
+  // ============================================================
+  //  VALIDAZIONE COORDINATE GEOGRAFICHE
+  //  Filtra valori manifestamente errati o "in mezzo al mare"
+  //  controllando i bounding box dei principali paesi vitivinicoli.
+  //  Se il paese del vino non è in tabella, applica solo controlli
+  //  generici (range planetario, non null).
+  // ============================================================
+  const COUNTRY_BBOX = {
+    'italia': { latMin: 35.5, latMax: 47.5, lngMin: 6.0, lngMax: 19.0 },
+    'francia': { latMin: 41.0, latMax: 51.5, lngMin: -5.5, lngMax: 9.8 },
+    'spagna': { latMin: 27.5, latMax: 44.0, lngMin: -18.5, lngMax: 4.5 },  // include Canarie
+    'portogallo': { latMin: 32.0, latMax: 42.5, lngMin: -31.5, lngMax: -6.0 },  // include Azzorre/Madera
+    'germania': { latMin: 47.0, latMax: 55.5, lngMin: 5.5, lngMax: 15.5 },
+    'austria': { latMin: 46.0, latMax: 49.5, lngMin: 9.0, lngMax: 17.5 },
+    'svizzera': { latMin: 45.5, latMax: 48.0, lngMin: 5.5, lngMax: 11.0 },
+    'ungheria': { latMin: 45.5, latMax: 48.8, lngMin: 16.0, lngMax: 23.0 },
+    'grecia': { latMin: 34.5, latMax: 42.0, lngMin: 19.0, lngMax: 28.5 },
+    'argentina': { latMin: -55.5, latMax: -21.5, lngMin: -73.5, lngMax: -53.5 },
+    'cile': { latMin: -56.0, latMax: -17.5, lngMin: -76.0, lngMax: -66.5 },
+    'usa': { latMin: 24.5, latMax: 49.5, lngMin: -125.0, lngMax: -66.5 },
+    'australia': { latMin: -44.0, latMax: -10.0, lngMin: 112.0, lngMax: 154.0 },
+    'sudafrica': { latMin: -35.0, latMax: -22.0, lngMin: 16.0, lngMax: 33.0 },
+    'nuova zelanda': { latMin: -47.5, latMax: -34.0, lngMin: 166.0, lngMax: 179.0 }
+  };
+
+  function validateCoordinates(lat, lng, country) {
+    // Controlli base
+    if (typeof lat !== 'number' || typeof lng !== 'number') return { valid: false, reason: 'tipo non valido' };
+    if (isNaN(lat) || isNaN(lng)) return { valid: false, reason: 'NaN' };
+    if (lat < -90 || lat > 90) return { valid: false, reason: 'latitudine fuori range' };
+    if (lng < -180 || lng > 180) return { valid: false, reason: 'longitudine fuori range' };
+    if (lat === 0 && lng === 0) return { valid: false, reason: 'coordinate zero (oceano)' };
+
+    // Controllo specifico per paese
+    const countryKey = (country || '').toLowerCase().trim();
+    const bbox = COUNTRY_BBOX[countryKey];
+    if (bbox) {
+      if (lat < bbox.latMin || lat > bbox.latMax || lng < bbox.lngMin || lng > bbox.lngMax) {
+        return { valid: false, reason: `coordinate fuori dai confini di ${country}` };
+      }
+    }
+    return { valid: true };
+  }
+
+  // Geocoding fallback usando Nominatim (gratuito, senza chiave)
+  // Quando le coordinate restituite dal modello sono sospette, proviamo
+  // a localizzare il punto a partire dal nome.
+  async function geocodeAndFillMap(placeName, country, elementId) {
+    try {
+      const query = encodeURIComponent(`${placeName}${country ? ', ' + country : ''}`);
+      const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
+      const resp = await fetch(url, {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!resp.ok) throw new Error('Nominatim non risponde');
+      const results = await resp.json();
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      if (!results.length) {
+        el.innerHTML = '<span style="padding: 20px; text-align: center;">Posizione non trovata su OpenStreetMap. Verifica il nome del comune.</span>';
+        return;
+      }
+      const lat = parseFloat(results[0].lat);
+      const lng = parseFloat(results[0].lon);
+      if (isNaN(lat) || isNaN(lng)) {
+        el.innerHTML = '<span style="padding: 20px;">Coordinate non valide dal geocoder.</span>';
+        return;
+      }
+      const bbox = `${lng - 0.12},${lat - 0.06},${lng + 0.12},${lat + 0.06}`;
+      const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
+      el.innerHTML = `<iframe src="${mapUrl}" style="width:100%;height:100%;border:0;" loading="lazy" title="Mappa"></iframe>`;
+      // Aggiungo link sotto la mappa
+      const link = document.createElement('a');
+      link.className = 'map-link';
+      link.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=11/${lat}/${lng}`;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'Apri mappa estesa →';
+      el.parentElement.appendChild(link);
+    } catch (err) {
+      console.warn('Geocoding fallito:', err);
+      const el = document.getElementById(elementId);
+      if (el) el.innerHTML = '<span style="padding: 20px;">Mappa non disponibile.</span>';
+    }
+  }
+
+  // Costruisce il contenuto HTML della scheda di dettaglio di un vino.
+  // Riutilizzato sia per la scheda principale post-scansione, sia per
+  // l'espansione inline delle card dello storico.
+  function buildSchedaHTML(d, options) {
+    options = options || {};
+    const inHistory = !!options.inHistory;
+
     const facts = [];
     if (d.type) facts.push(['Tipologia', d.type]);
     if (d.grapes && d.grapes.length) facts.push(['Vitigni', d.grapes.join(', ')]);
@@ -1692,28 +1835,44 @@ Regole:
       ? `<div class="section"><div class="section-title">Storia &amp; Cantina</div><p>${escapeHTML(d.history)}</p></div>`
       : '';
 
-    // ===== MAPPA CON LIVELLO DI PRECISIONE =====
+    // ===== MAPPA CON LIVELLO DI PRECISIONE E VALIDAZIONE COORDINATE =====
     let mapHTML = '';
-    if (d.vineyardLocation && d.vineyardLocation.lat && d.vineyardLocation.lng) {
-      const { lat, lng, name, precisionLevel, address } = d.vineyardLocation;
-      // Zoom maggiore (bbox più stretto) se abbiamo l'indirizzo della cantina
-      const isPrecise = precisionLevel === 'cantina';
-      const zoomDelta = isPrecise ? 0.025 : 0.12;
-      const zoomDeltaLat = isPrecise ? 0.012 : 0.06;
-      const bbox = `${lng - zoomDelta},${lat - zoomDeltaLat},${lng + zoomDelta},${lat + zoomDeltaLat}`;
-      const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
-      const mapZoom = isPrecise ? 15 : 11;
-      const sectionLabel = isPrecise ? 'Cantina' : 'Territorio';
-      const precisionBadge = isPrecise
-        ? '<span class="map-precision precision-cantina">📍 Indirizzo cantina</span>'
-        : '<span class="map-precision precision-zona">⊙ Area vitivinicola</span>';
-      mapHTML = `<div class="section">
-        <div class="section-title">${sectionLabel}${name ? ' — ' + escapeHTML(name) : ''}</div>
-        ${precisionBadge}
-        ${isPrecise && address ? `<p class="map-address">${escapeHTML(address)}</p>` : ''}
-        <iframe class="map-container" src="${mapUrl}" loading="lazy" title="Mappa"></iframe>
-        <a class="map-link" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=${mapZoom}/${lat}/${lng}" target="_blank" rel="noopener">Apri mappa estesa →</a>
-      </div>`;
+    if (d.vineyardLocation && d.vineyardLocation.lat != null && d.vineyardLocation.lng != null) {
+      const { name, precisionLevel, address } = d.vineyardLocation;
+      let { lat, lng } = d.vineyardLocation;
+      const validation = validateCoordinates(lat, lng, d.country);
+      const isPrecise = precisionLevel === 'cantina' && validation.valid;
+
+      if (validation.valid) {
+        const zoomDelta = isPrecise ? 0.025 : 0.12;
+        const zoomDeltaLat = isPrecise ? 0.012 : 0.06;
+        const bbox = `${lng - zoomDelta},${lat - zoomDeltaLat},${lng + zoomDelta},${lat + zoomDeltaLat}`;
+        const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
+        const mapZoom = isPrecise ? 15 : 11;
+        const sectionLabel = isPrecise ? 'Cantina' : 'Territorio';
+        const precisionBadge = isPrecise
+          ? '<span class="map-precision precision-cantina">📍 Indirizzo cantina</span>'
+          : '<span class="map-precision precision-zona">⊙ Area vitivinicola</span>';
+        mapHTML = `<div class="section" id="mapSection">
+          <div class="section-title">${sectionLabel}${name ? ' — ' + escapeHTML(name) : ''}</div>
+          ${precisionBadge}
+          ${isPrecise && address ? `<p class="map-address">${escapeHTML(address)}</p>` : ''}
+          <iframe class="map-container" src="${mapUrl}" loading="lazy" title="Mappa"></iframe>
+          <a class="map-link" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=${mapZoom}/${lat}/${lng}" target="_blank" rel="noopener">Apri mappa estesa →</a>
+        </div>`;
+      } else if (name) {
+        // Coordinate sospette: tentiamo geocoding asincrono via Nominatim.
+        // Genero un placeholder che viene riempito dopo render dal geocoder.
+        const placeholderId = 'map-placeholder-' + Date.now();
+        mapHTML = `<div class="section" id="mapSection">
+          <div class="section-title">Territorio${name ? ' — ' + escapeHTML(name) : ''}</div>
+          <span class="map-precision precision-zona">⊙ Localizzazione approssimativa</span>
+          <p class="map-address" style="color: var(--ink-mute);">Coordinate non verificate (${validation.reason}). Tentativo di localizzazione dal nome…</p>
+          <div id="${placeholderId}" class="map-container" style="display: flex; align-items: center; justify-content: center; color: var(--ink-mute); font-style: italic;">Caricamento mappa…</div>
+        </div>`;
+        // Schedulo geocoding dopo il render
+        setTimeout(() => geocodeAndFillMap(name, d.country, placeholderId), 100);
+      }
     }
 
     const sourcesHTML = d.sources && d.sources.length
@@ -1727,8 +1886,7 @@ Regole:
       ? `<div class="confidence-tag">Riconoscimento · confidenza ${escapeHTML(d.confidence)}</div>`
       : '';
 
-    resultDiv.innerHTML = `
-      <button class="result-close" id="resultCloseBtn" aria-label="Chiudi"></button>
+    return `
       <div class="wine-header">
         ${d.producer ? `<div class="wine-producer">${escapeHTML(d.producer)}</div>` : ''}
         <div class="wine-name">${escapeHTML(d.wineName || 'Vino')}</div>
@@ -1744,6 +1902,13 @@ Regole:
       ${historyHTML}
       ${mapHTML}
       ${sourcesHTML}
+    `;
+  }
+
+  function renderResult(d) {
+    resultDiv.innerHTML = `
+      <button class="result-close" id="resultCloseBtn" aria-label="Chiudi"></button>
+      ${buildSchedaHTML(d)}
       <div class="actions" style="margin-top: 40px;">
         <button class="btn-ghost" id="newScanBtn">Scansiona un'altra bottiglia</button>
       </div>
@@ -1791,42 +1956,76 @@ Regole:
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(capped)); } catch {}
   }
 
+  // Set di indici di card storico attualmente espanse (in memoria, non persistito)
+  const expandedHistoryIndices = new Set();
+
   function renderHistory() {
     const h = loadHistory();
     if (!h.length) {
       historyContent.innerHTML = '<div class="history-empty">La tua cantina è ancora vuota. Scansiona la prima bottiglia per iniziare.</div>';
       return;
     }
-    historyContent.innerHTML = '<div class="history-grid">' + h.map((item, idx) => `
-      <div class="history-card" data-idx="${idx}">
-        <button class="history-card-delete" data-del="${idx}" title="Rimuovi">✕</button>
-        ${item.producer ? `<div class="history-card-producer">${escapeHTML(item.producer)}</div>` : ''}
-        <div class="history-card-name">${escapeHTML(item.wineName || 'Vino')}</div>
-        <div class="history-card-meta">
-          ${item.vintage ? escapeHTML(String(item.vintage)) + ' · ' : ''}${escapeHTML(item.region || item.country || '')}
+    historyContent.innerHTML = '<div class="history-grid">' + h.map((item, idx) => {
+      const isOpen = expandedHistoryIndices.has(idx);
+      const expandedHTML = (isOpen && item._full)
+        ? `<div class="history-card-expanded">${buildSchedaHTML(item._full, { inHistory: true })}</div>`
+        : '';
+      return `
+      <div class="history-card${isOpen ? ' open' : ''}" data-idx="${idx}">
+        <div class="history-card-summary" data-toggle="${idx}">
+          <button class="history-card-delete" data-del="${idx}" title="Rimuovi dalla cantina">✕</button>
+          <span class="history-card-chevron" aria-hidden="true">${isOpen ? '▾' : '▸'}</span>
+          <div class="history-card-info">
+            ${item.producer ? `<div class="history-card-producer">${escapeHTML(item.producer)}</div>` : ''}
+            <div class="history-card-name">${escapeHTML(item.wineName || 'Vino')}</div>
+            <div class="history-card-meta">
+              ${item.vintage ? escapeHTML(String(item.vintage)) + ' · ' : ''}${escapeHTML(item.region || item.country || '')}
+            </div>
+          </div>
         </div>
+        ${expandedHTML}
       </div>
-    `).join('') + '</div>';
+    `;}).join('') + '</div>';
 
-    historyContent.querySelectorAll('.history-card').forEach(card => {
-      card.addEventListener('click', e => {
+    // Toggle apertura/chiusura
+    historyContent.querySelectorAll('[data-toggle]').forEach(summary => {
+      summary.addEventListener('click', e => {
+        // Il pulsante delete intercetta il click; vedi handler sotto
         if (e.target.dataset.del !== undefined) return;
-        const idx = parseInt(card.dataset.idx);
-        const full = loadHistory()[idx]._full;
-        if (full) {
-          renderResult(full);
-          preview.style.display = 'none';
-          uploaderWrap.style.display = 'block';
+        const idx = parseInt(summary.dataset.toggle);
+        if (expandedHistoryIndices.has(idx)) {
+          expandedHistoryIndices.delete(idx);
+        } else {
+          expandedHistoryIndices.add(idx);
+        }
+        renderHistory();
+        // Se l'utente apre una card, scrolliamola in vista
+        if (expandedHistoryIndices.has(idx)) {
+          setTimeout(() => {
+            const card = historyContent.querySelector(`.history-card[data-idx="${idx}"]`);
+            if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 50);
         }
       });
     });
+
+    // Cestino: cancella permanentemente
     historyContent.querySelectorAll('[data-del]').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
         const idx = parseInt(btn.dataset.del);
-        const h = loadHistory();
-        h.splice(idx, 1);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+        if (!confirm('Rimuovere questo vino dalla cantina? Operazione irreversibile.')) return;
+        const list = loadHistory();
+        list.splice(idx, 1);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        // Riallineo gli indici espansi: tutti quelli > idx scendono di 1
+        const newSet = new Set();
+        expandedHistoryIndices.forEach(i => {
+          if (i < idx) newSet.add(i);
+          else if (i > idx) newSet.add(i - 1);
+        });
+        expandedHistoryIndices.clear();
+        newSet.forEach(i => expandedHistoryIndices.add(i));
         renderHistory();
       });
     });

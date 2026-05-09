@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-010">
+<meta name="app-version" content="2026.05.09-011">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -1179,7 +1179,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-010';
+  const APP_VERSION = '2026.05.09-011';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
@@ -1667,43 +1667,67 @@ Regole:
   // Geocoding fallback usando Nominatim (gratuito, senza chiave)
   // Quando le coordinate restituite dal modello sono sospette, proviamo
   // a localizzare il punto a partire dal nome.
-  async function geocodeAndFillMap(placeName, country, elementId) {
-    try {
-      const query = encodeURIComponent(`${placeName}${country ? ', ' + country : ''}`);
-      const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
-      const resp = await fetch(url, {
-        headers: { 'Accept': 'application/json' }
-      });
-      if (!resp.ok) throw new Error('Nominatim non risponde');
-      const results = await resp.json();
-      const el = document.getElementById(elementId);
-      if (!el) return;
-      if (!results.length) {
-        el.innerHTML = '<span style="padding: 20px; text-align: center;">Posizione non trovata su OpenStreetMap. Verifica il nome del comune.</span>';
-        return;
+  // Cerca su Nominatim a cascata: prima la query primaria (es. indirizzo
+  // completo), poi il fallback (es. solo nome del comune), infine — se
+  // entrambe falliscono — usa le coordinate fornite dal modello a patto
+  // che superino la validazione geografica.
+  async function geocodeAndFillMap(primaryQuery, fallbackName, country, elementId, fallbackCoords, isPrecise) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    async function tryNominatim(query) {
+      if (!query) return null;
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + (country ? ', ' + country : ''))}&format=json&limit=1`;
+        const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (!resp.ok) return null;
+        const results = await resp.json();
+        if (!results.length) return null;
+        const lat = parseFloat(results[0].lat);
+        const lng = parseFloat(results[0].lon);
+        if (isNaN(lat) || isNaN(lng)) return null;
+        return { lat, lng, displayName: results[0].display_name };
+      } catch {
+        return null;
       }
-      const lat = parseFloat(results[0].lat);
-      const lng = parseFloat(results[0].lon);
-      if (isNaN(lat) || isNaN(lng)) {
-        el.innerHTML = '<span style="padding: 20px;">Coordinate non valide dal geocoder.</span>';
-        return;
-      }
-      const bbox = `${lng - 0.12},${lat - 0.06},${lng + 0.12},${lat + 0.06}`;
-      const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
-      el.innerHTML = `<iframe src="${mapUrl}" style="width:100%;height:100%;border:0;" loading="lazy" title="Mappa"></iframe>`;
-      // Aggiungo link sotto la mappa
-      const link = document.createElement('a');
-      link.className = 'map-link';
-      link.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=11/${lat}/${lng}`;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = 'Apri mappa estesa →';
-      el.parentElement.appendChild(link);
-    } catch (err) {
-      console.warn('Geocoding fallito:', err);
-      const el = document.getElementById(elementId);
-      if (el) el.innerHTML = '<span style="padding: 20px;">Mappa non disponibile.</span>';
     }
+
+    // Tentativo 1: query primaria (indirizzo completo se disponibile)
+    let coords = await tryNominatim(primaryQuery);
+
+    // Tentativo 2: fallback al nome del comune se diverso dalla primaria
+    if (!coords && fallbackName && fallbackName !== primaryQuery) {
+      coords = await tryNominatim(fallbackName);
+    }
+
+    // Tentativo 3: fallback alle coordinate del modello, ma solo se valide
+    if (!coords && fallbackCoords && fallbackCoords.lat != null && fallbackCoords.lng != null) {
+      const validation = validateCoordinates(fallbackCoords.lat, fallbackCoords.lng, country);
+      if (validation.valid) {
+        coords = { lat: fallbackCoords.lat, lng: fallbackCoords.lng, displayName: '(coordinate del modello, non verificate)' };
+      }
+    }
+
+    if (!coords) {
+      el.innerHTML = '<span style="padding: 20px; text-align: center;">Posizione non trovata su OpenStreetMap. Verifica il nome del luogo.</span>';
+      return;
+    }
+
+    // Render mappa con zoom variabile in base alla precisione
+    const zoomDelta = isPrecise ? 0.025 : 0.12;
+    const zoomDeltaLat = isPrecise ? 0.012 : 0.06;
+    const bbox = `${coords.lng - zoomDelta},${coords.lat - zoomDeltaLat},${coords.lng + zoomDelta},${coords.lat + zoomDeltaLat}`;
+    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${coords.lat},${coords.lng}`;
+    const mapZoom = isPrecise ? 15 : 11;
+    el.innerHTML = `<iframe src="${mapUrl}" style="width:100%;height:100%;border:0;" loading="lazy" title="Mappa"></iframe>`;
+    // Aggiungo link sotto la mappa
+    const link = document.createElement('a');
+    link.className = 'map-link';
+    link.href = `https://www.openstreetmap.org/?mlat=${coords.lat}&mlon=${coords.lng}#map=${mapZoom}/${coords.lat}/${coords.lng}`;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = 'Apri mappa estesa →';
+    el.parentElement.appendChild(link);
   }
 
   // Costruisce il contenuto HTML della scheda di dettaglio di un vino.
@@ -1835,44 +1859,41 @@ Regole:
       ? `<div class="section"><div class="section-title">Storia &amp; Cantina</div><p>${escapeHTML(d.history)}</p></div>`
       : '';
 
-    // ===== MAPPA CON LIVELLO DI PRECISIONE E VALIDAZIONE COORDINATE =====
+    // ===== MAPPA CON GEOCODING AUTOREVOLE =====
+    // Strategia: ignoriamo le coordinate del modello (spesso allucinate) e
+    // geocoding-ammo SEMPRE l'indirizzo o il nome via Nominatim, che è la
+    // fonte autoritativa di OpenStreetMap. Le coordinate del modello sono
+    // usate solo come fallback se Nominatim non trova nulla E le coordinate
+    // passano la validazione geografica.
     let mapHTML = '';
-    if (d.vineyardLocation && d.vineyardLocation.lat != null && d.vineyardLocation.lng != null) {
+    if (d.vineyardLocation && (d.vineyardLocation.name || d.vineyardLocation.address)) {
       const { name, precisionLevel, address } = d.vineyardLocation;
-      let { lat, lng } = d.vineyardLocation;
-      const validation = validateCoordinates(lat, lng, d.country);
-      const isPrecise = precisionLevel === 'cantina' && validation.valid;
+      const isPrecise = precisionLevel === 'cantina' && !!address;
+      const sectionLabel = isPrecise ? 'Cantina' : 'Territorio';
+      const precisionBadge = isPrecise
+        ? '<span class="map-precision precision-cantina">📍 Indirizzo cantina</span>'
+        : '<span class="map-precision precision-zona">⊙ Area vitivinicola</span>';
+      const placeholderId = 'map-placeholder-' + Math.random().toString(36).substr(2, 9);
 
-      if (validation.valid) {
-        const zoomDelta = isPrecise ? 0.025 : 0.12;
-        const zoomDeltaLat = isPrecise ? 0.012 : 0.06;
-        const bbox = `${lng - zoomDelta},${lat - zoomDeltaLat},${lng + zoomDelta},${lat + zoomDeltaLat}`;
-        const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
-        const mapZoom = isPrecise ? 15 : 11;
-        const sectionLabel = isPrecise ? 'Cantina' : 'Territorio';
-        const precisionBadge = isPrecise
-          ? '<span class="map-precision precision-cantina">📍 Indirizzo cantina</span>'
-          : '<span class="map-precision precision-zona">⊙ Area vitivinicola</span>';
-        mapHTML = `<div class="section" id="mapSection">
-          <div class="section-title">${sectionLabel}${name ? ' — ' + escapeHTML(name) : ''}</div>
-          ${precisionBadge}
-          ${isPrecise && address ? `<p class="map-address">${escapeHTML(address)}</p>` : ''}
-          <iframe class="map-container" src="${mapUrl}" loading="lazy" title="Mappa"></iframe>
-          <a class="map-link" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=${mapZoom}/${lat}/${lng}" target="_blank" rel="noopener">Apri mappa estesa →</a>
-        </div>`;
-      } else if (name) {
-        // Coordinate sospette: tentiamo geocoding asincrono via Nominatim.
-        // Genero un placeholder che viene riempito dopo render dal geocoder.
-        const placeholderId = 'map-placeholder-' + Date.now();
-        mapHTML = `<div class="section" id="mapSection">
-          <div class="section-title">Territorio${name ? ' — ' + escapeHTML(name) : ''}</div>
-          <span class="map-precision precision-zona">⊙ Localizzazione approssimativa</span>
-          <p class="map-address" style="color: var(--ink-mute);">Coordinate non verificate (${validation.reason}). Tentativo di localizzazione dal nome…</p>
-          <div id="${placeholderId}" class="map-container" style="display: flex; align-items: center; justify-content: center; color: var(--ink-mute); font-style: italic;">Caricamento mappa…</div>
-        </div>`;
-        // Schedulo geocoding dopo il render
-        setTimeout(() => geocodeAndFillMap(name, d.country, placeholderId), 100);
-      }
+      mapHTML = `<div class="section" id="mapSection">
+        <div class="section-title">${sectionLabel}${name ? ' — ' + escapeHTML(name) : ''}</div>
+        ${precisionBadge}
+        ${isPrecise && address ? `<p class="map-address">${escapeHTML(address)}</p>` : ''}
+        <div id="${placeholderId}" class="map-container" style="display: flex; align-items: center; justify-content: center; color: var(--ink-mute); font-style: italic;">Caricamento mappa…</div>
+      </div>`;
+
+      // Geocoding asincrono dopo il render. Provo prima l'indirizzo completo
+      // (più preciso), poi fallback al nome del comune, poi alle coordinate
+      // del modello se valide.
+      const fallbackCoords = d.vineyardLocation;
+      setTimeout(() => geocodeAndFillMap(
+        address || name,
+        name,
+        d.country,
+        placeholderId,
+        fallbackCoords,
+        isPrecise
+      ), 80);
     }
 
     const sourcesHTML = d.sources && d.sources.length

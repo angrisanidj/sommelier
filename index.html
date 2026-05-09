@@ -9,7 +9,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-001">
+<meta name="app-version" content="2026.05.09-002">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -925,8 +925,8 @@
     <label class="uploader" id="uploader" for="fileInput">
       <div class="uploader-icon">🍷</div>
       <div class="uploader-title">Carica una bottiglia</div>
-      <div class="uploader-sub">Tocca per scattare una foto o sceglierla dalla galleria</div>
-      <input type="file" id="fileInput" accept="image/*" capture="environment">
+      <div class="uploader-sub">Scatta una foto o scegli dalla galleria</div>
+      <input type="file" id="fileInput" accept="image/*">
     </label>
   </div>
 
@@ -971,7 +971,7 @@
   //  l'aggiornamento automatico sui dispositivi degli utenti.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-001';
+  const APP_VERSION = '2026.05.09-002';
   const CACHE_PREFIX = 'sommelier-cache-';
   const CACHE_NAME = CACHE_PREFIX + APP_VERSION;
 

@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-023">
+<meta name="app-version" content="2026.05.10-027">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -59,6 +59,7 @@
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  [hidden] { display: none !important; }
   html, body {
     background: var(--paper);
     color: var(--ink);
@@ -488,7 +489,153 @@
     border-bottom: 1px solid var(--rule);
     padding-bottom: 32px;
     margin-bottom: 36px;
+    position: relative;
   }
+  .wine-edit-trigger {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--ink-mute);
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 0;
+  }
+  .wine-edit-trigger:hover {
+    color: var(--bordeaux);
+    border-color: var(--rule);
+  }
+  .wine-edit-trigger .edit-icon {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 13px;
+    margin-right: 4px;
+  }
+  .wine-edit-form {
+    text-align: left;
+    margin-top: 20px;
+    padding: 20px 22px;
+    background: rgba(160,123,61,0.06);
+    border: 1px solid var(--gold);
+    border-left-width: 3px;
+    animation: expandIn 0.3s ease-out;
+  }
+  .wine-edit-form-title {
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .wine-edit-form-intro {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+    line-height: 1.4;
+  }
+  .wine-edit-form-row {
+    margin-bottom: 14px;
+  }
+  .wine-edit-form-row label {
+    display: block;
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+  .wine-edit-form-row input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--rule);
+    background: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 15px;
+    color: var(--ink);
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    transition: border-color 0.2s;
+  }
+  .wine-edit-form-row input:focus {
+    outline: none;
+    border-color: var(--bordeaux);
+  }
+  .wine-edit-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 500px) {
+    .wine-edit-form-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 0 14px;
+    }
+    .wine-edit-form-row.full-width {
+      grid-column: 1 / -1;
+    }
+  }
+  .wine-edit-form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .wine-edit-cancel,
+  .wine-edit-submit {
+    padding: 10px 20px;
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.2s;
+  }
+  .wine-edit-cancel {
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  .wine-edit-cancel:hover { border-color: var(--bordeaux); color: var(--bordeaux); }
+  .wine-edit-submit {
+    background: var(--bordeaux);
+    border: 1px solid var(--bordeaux);
+    color: var(--cream);
+  }
+  .wine-edit-submit:hover { background: var(--bordeaux-deep); }
+  .wine-edit-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .wine-edit-loading {
+    text-align: center;
+    padding: 32px 20px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+  .wine-edit-loading-dots {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 8px;
+  }
+  .wine-edit-loading-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: dotPulse 1.4s infinite ease-in-out;
+  }
+  .wine-edit-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .wine-edit-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
   .wine-producer {
     font-family: 'Special Elite', serif;
     font-size: 11px;
@@ -1659,6 +1806,7 @@
     justify-content: center;
     animation: fadeIn 0.2s ease-out;
   }
+  .sommelier-modal[hidden] { display: none; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .sommelier-modal-inner {
     background: var(--paper);
@@ -1703,6 +1851,36 @@
     color: var(--bordeaux-deep);
     margin: 0;
     font-weight: 500;
+  }
+  .sommelier-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sommelier-new-chat {
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 7px 10px;
+    transition: all 0.2s;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .sommelier-new-chat:hover {
+    color: var(--bordeaux);
+    border-color: var(--bordeaux);
+  }
+  .sommelier-new-chat-icon {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 13px;
+    color: var(--gold);
   }
   .sommelier-close {
     background: none;
@@ -2031,7 +2209,13 @@
           <div class="sommelier-header-eyebrow">Casa Nuvola</div>
           <h3 class="sommelier-header-title">Il Sommelier</h3>
         </div>
-        <button class="sommelier-close" id="sommelierClose" aria-label="Chiudi">✕</button>
+        <div class="sommelier-header-actions">
+          <button class="sommelier-new-chat" id="sommelierNewChat" title="Nuova conversazione" hidden>
+            <span class="sommelier-new-chat-icon">↻</span>
+            <span class="sommelier-new-chat-text">Nuova</span>
+          </button>
+          <button class="sommelier-close" id="sommelierClose" aria-label="Chiudi">✕</button>
+        </div>
       </div>
       <div class="sommelier-thread" id="sommelierThread"></div>
       <div class="sommelier-suggestions" id="sommelierSuggestions"></div>
@@ -2055,7 +2239,7 @@
       <div class="tasting-modal-body">
         <div class="tasting-form-group">
           <label class="tasting-form-label">Data della degustazione</label>
-          <input type="date" class="tasting-form-input" id="tastingDate">
+          <input type="date" class="tasting-form-input" id="tastingDate" max="">
         </div>
         <div class="tasting-form-group">
           <label class="tasting-form-label">Valutazione personale</label>
@@ -2118,7 +2302,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-023';
+  const APP_VERSION = '2026.05.10-027';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
@@ -2349,18 +2533,33 @@
 
       // ============================================================
       //  CACHE HIT: se questo vino è già stato scansionato (stessa
-      //  combinazione produttore + nome + annata), riusa la scheda
-      //  esistente senza fare la chiamata di arricchimento.
-      //  Risparmio: 100% del costo della fase 2 sulle ri-scansioni.
+      //  combinazione produttore + nome + annata), chiediamo all'utente
+      //  se vuole riusare la scheda esistente o rigenerarla. Risparmio:
+      //  100% del costo della fase 2 sulle ri-scansioni accettate.
       // ============================================================
-      const cached = findInHistory(identification);
-      if (cached) {
-        loaderText.textContent = 'Vino già nella cantina personale…';
-        loaderStep.textContent = 'Recupero scheda esistente';
-        // Piccola pausa per dare feedback visivo all'utente
-        await new Promise(r => setTimeout(r, 500));
-        renderResult(cached);
-        return;
+      const cachedMatch = findInHistory(identification);
+      if (cachedMatch) {
+        // Costruisco messaggio di conferma con i dati riconosciuti
+        const wineLabel = [identification.producer, identification.wineName, identification.vintage]
+          .filter(Boolean).join(' ');
+        loader.style.display = 'none';
+        const useCache = confirm(
+          `Hai già "${wineLabel}" nella tua cantina.\n\n` +
+          `Premi OK per riaprire la scheda esistente (con le tue degustazioni).\n` +
+          `Premi Annulla per rigenerare i dati da zero (~5¢, sovrascrive la scheda mantenendo le degustazioni).`
+        );
+        if (useCache) {
+          // Aggiorno il timestamp di "ultima vista" e ripristino l'ordine
+          // (porto il vino in cima alla cantina come fosse nuovo)
+          touchHistoryEntry(cachedMatch.cacheIdx);
+          renderResult(cachedMatch.fullData);
+          renderHistory();
+          preview.style.display = 'none';
+          return;
+        }
+        // Altrimenti: continuo con fase 2 e poi sovrascrivo l'entry esistente,
+        // preservando le degustazioni
+        loader.style.display = 'flex';
       }
 
       loaderText.textContent = 'Ricerca informazioni dettagliate sul web…';
@@ -2369,8 +2568,18 @@
       const details = await fetchWineDetails(identification);
 
       const fullData = { ...identification, ...details, scannedAt: new Date().toISOString() };
+
+      // Se era un duplicato e l'utente ha scelto di rigenerare:
+      // sovrascrivo l'entry esistente preservando degustazioni e foto originale
+      if (cachedMatch) {
+        const existingTastings = (cachedMatch.fullData.tastings) || [];
+        fullData.tastings = existingTastings;
+        overwriteHistoryEntry(cachedMatch.cacheIdx, fullData);
+      } else {
+        saveToHistory(fullData);
+      }
+
       renderResult(fullData);
-      saveToHistory(fullData);
       renderHistory();
     } catch (err) {
       console.error(err);
@@ -2390,15 +2599,79 @@
     const targetName = norm(id.wineName);
     const targetVintage = norm(id.vintage);
     if (!targetProducer || !targetName) return null;
-    for (const item of h) {
+    for (let i = 0; i < h.length; i++) {
+      const item = h[i];
       if (norm(item.producer) === targetProducer &&
           norm(item.wineName) === targetName &&
           norm(item.vintage) === targetVintage &&
           item._full) {
-        return item._full;
+        return { cacheIdx: i, fullData: item._full };
       }
     }
     return null;
+  }
+
+  // Aggiorna il timestamp dell'ultima volta che il vino è stato "incontrato"
+  // (scansionato di nuovo) e lo riporta in cima alla cantina come elemento recente.
+  function touchHistoryEntry(idx) {
+    const h = loadHistory();
+    if (idx < 0 || idx >= h.length) return;
+    const item = h[idx];
+    item.updatedAt = Date.now();
+    // Sposta in cima
+    h.splice(idx, 1);
+    h.unshift(item);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+    } catch (err) {
+      // Silenzioso: non è un'operazione critica
+    }
+    touchHistoryIndicesAfterMoveToTop(idx);
+  }
+
+  // Sovrascrive l'entry esistente con dati nuovi rigenerati, mantenendo
+  // foto originale e timestamp del primo salvataggio. Le degustazioni
+  // dovrebbero essere già state preservate dal chiamante dentro fullData.tastings.
+  function overwriteHistoryEntry(idx, fullData) {
+    const h = loadHistory();
+    if (idx < 0 || idx >= h.length) return;
+    const old = h[idx];
+    h[idx] = {
+      producer: fullData.producer || null,
+      wineName: fullData.wineName || null,
+      vintage: fullData.vintage || null,
+      country: fullData.country || null,
+      region: fullData.region || null,
+      type: fullData.type || null,
+      thumb: old.thumb || fullData.thumb || null,  // preservo la vecchia foto se c'era
+      savedAt: old.savedAt,                         // primo salvataggio originale
+      updatedAt: Date.now(),                        // marca della rigenerazione
+      _full: fullData
+    };
+    // Riporto in cima
+    const updated = h.splice(idx, 1)[0];
+    h.unshift(updated);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+    } catch (err) {
+      showError('Memoria piena: rimuovi qualche vino per fare spazio.');
+    }
+    // Sposta gli indici espansi in modo coerente
+    touchHistoryIndicesAfterMoveToTop(idx);
+  }
+
+  // Helper di riallineamento condiviso
+  function touchHistoryIndicesAfterMoveToTop(idx) {
+    const wasOpen = expandedHistoryIndices.has(idx);
+    const newSet = new Set();
+    expandedHistoryIndices.forEach(i => {
+      if (i === idx) return;
+      if (i < idx) newSet.add(i + 1);
+      else newSet.add(i);
+    });
+    if (wasOpen) newSet.add(0);
+    expandedHistoryIndices.clear();
+    newSet.forEach(i => expandedHistoryIndices.add(i));
   }
 
   async function identifyWine() {
@@ -2857,8 +3130,16 @@ Regole:
       ? `<div class="confidence-tag">Riconoscimento · confidenza ${escapeHTML(d.confidence)}</div>`
       : '';
 
+    const editButtonHTML = (inHistory && typeof options.wineIdx === 'number')
+      ? `<button class="wine-edit-trigger" data-edit-wine="${options.wineIdx}" title="Correggi i dati di questo vino">
+           <span class="edit-icon">✎</span>Modifica
+         </button>
+         <div class="wine-edit-form-container" id="wineEditContainer-${options.wineIdx}"></div>`
+      : '';
+
     return `
       <div class="wine-header">
+        ${editButtonHTML}
         ${d.producer ? `<div class="wine-producer">${escapeHTML(d.producer)}</div>` : ''}
         <div class="wine-name">${escapeHTML(d.wineName || 'Vino')}</div>
         ${d.vintage ? `<div class="wine-vintage">Annata <strong>${escapeHTML(String(d.vintage))}</strong></div>` : ''}
@@ -2924,7 +3205,11 @@ Regole:
     };
     h.unshift(lite);
     const capped = h.slice(0, 60);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(capped)); } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(capped));
+    } catch (err) {
+      showError('Memoria piena: rimuovi qualche vino o degustazione per fare spazio.');
+    }
   }
 
   // Set di indici di card storico attualmente espanse (in memoria, non persistito)
@@ -3070,7 +3355,9 @@ Regole:
     // Reset form
     const today = new Date();
     const isoDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    document.getElementById('tastingDate').value = isoDate;
+    const dateInput = document.getElementById('tastingDate');
+    dateInput.value = isoDate;
+    dateInput.max = isoDate; // impedisce date future a livello di UI
     document.getElementById('tastingCompany').value = '';
     document.getElementById('tastingFood').value = '';
     document.getElementById('tastingNote').value = '';
@@ -3084,7 +3371,19 @@ Regole:
     document.body.style.overflow = 'hidden';
   }
 
-  function closeTastingModal() {
+  function closeTastingModal(skipConfirm) {
+    // Se l'utente ha già scritto qualcosa, chiedo conferma per evitare di
+    // perdere la nota per un tap accidentale sullo sfondo
+    if (!skipConfirm && tastingState.wineIdx >= 0) {
+      const hasData = tastingState.selectedStars > 0
+        || tastingState.selectedOccasion
+        || (document.getElementById('tastingCompany').value || '').trim()
+        || (document.getElementById('tastingFood').value || '').trim()
+        || (document.getElementById('tastingNote').value || '').trim();
+      if (hasData && !confirm('Annullare la degustazione? Andranno persi i dati inseriti.')) {
+        return;
+      }
+    }
     document.getElementById('tastingModal').hidden = true;
     document.body.style.overflow = '';
     tastingState.wineIdx = -1;
@@ -3098,6 +3397,12 @@ Regole:
       showError('Seleziona una data per la degustazione.');
       return;
     }
+    // Verifica che la data non sia futura
+    const todayIso = todayStamp();
+    if (date > todayIso) {
+      showError('La data della degustazione non può essere nel futuro.');
+      return;
+    }
     const tasting = {
       id: generateTastingId(),
       date,
@@ -3109,13 +3414,14 @@ Regole:
       createdAt: Date.now()
     };
     if (saveTasting(tastingState.wineIdx, tasting)) {
-      closeTastingModal();
-      renderHistory();
-      // Riapro la card del vino se non lo è
-      if (!expandedHistoryIndices.has(tastingState.wineIdx)) {
-        expandedHistoryIndices.add(tastingState.wineIdx);
-        renderHistory();
+      // Salvo l'idx prima di chiudere (closeTastingModal lo resetta a -1)
+      const savedIdx = tastingState.wineIdx;
+      closeTastingModal(true); // skipConfirm: non chiedere se chiudere, abbiamo salvato
+      // Espando la card del vino se non lo è (per mostrare la nuova degustazione)
+      if (!expandedHistoryIndices.has(savedIdx)) {
+        expandedHistoryIndices.add(savedIdx);
       }
+      renderHistory();
     }
   }
 
@@ -3251,6 +3557,163 @@ Regole:
   }
 
   // ==========================================================================
+  // MODIFICA DATI VINO
+  // ==========================================================================
+  // Permette di correggere i campi essenziali letti male dal modello (annata,
+  // produttore, nome, regione) e rilancia la fase 2 con i dati corretti per
+  // rigenerare tutta la scheda enciclopedica. Le degustazioni personali
+  // restano intatte.
+  // ==========================================================================
+
+  function buildEditFormHTML(wineIdx) {
+    const h = loadHistory();
+    if (wineIdx < 0 || wineIdx >= h.length) return '';
+    const wine = h[wineIdx];
+    const f = wine._full || {};
+    return `
+      <div class="wine-edit-form" id="wineEditForm-${wineIdx}">
+        <div class="wine-edit-form-title">Correggi dati</div>
+        <div class="wine-edit-form-intro">Modifica i campi essenziali e rigenera la scheda. Le tue degustazioni personali resteranno intatte.</div>
+        <div class="wine-edit-form-grid">
+          <div class="wine-edit-form-row full-width">
+            <label>Produttore</label>
+            <input type="text" id="editProducer-${wineIdx}" value="${escapeHTML(wine.producer || '')}" placeholder="es. Tenuta La Presa">
+          </div>
+          <div class="wine-edit-form-row full-width">
+            <label>Nome del vino</label>
+            <input type="text" id="editWineName-${wineIdx}" value="${escapeHTML(wine.wineName || '')}" placeholder="es. Barolo Brunate">
+          </div>
+          <div class="wine-edit-form-row">
+            <label>Annata</label>
+            <input type="text" inputmode="numeric" maxlength="4" id="editVintage-${wineIdx}" value="${escapeHTML(wine.vintage ? String(wine.vintage) : '')}" placeholder="es. 2018">
+          </div>
+          <div class="wine-edit-form-row">
+            <label>Regione</label>
+            <input type="text" id="editRegion-${wineIdx}" value="${escapeHTML(wine.region || '')}" placeholder="es. Piemonte">
+          </div>
+          <div class="wine-edit-form-row full-width">
+            <label>Paese</label>
+            <input type="text" id="editCountry-${wineIdx}" value="${escapeHTML(wine.country || '')}" placeholder="es. Italia">
+          </div>
+        </div>
+        <div class="wine-edit-form-actions">
+          <button class="wine-edit-cancel" data-cancel-edit="${wineIdx}">Annulla</button>
+          <button class="wine-edit-submit" data-submit-edit="${wineIdx}">Aggiorna scheda</button>
+        </div>
+      </div>`;
+  }
+
+  function openEditForm(wineIdx) {
+    const container = document.getElementById(`wineEditContainer-${wineIdx}`);
+    if (!container) return;
+    container.innerHTML = buildEditFormHTML(wineIdx);
+    // Nascondi pulsante mentre il form è aperto
+    const trigger = document.querySelector(`[data-edit-wine="${wineIdx}"]`);
+    if (trigger) trigger.style.display = 'none';
+  }
+
+  function closeEditForm(wineIdx) {
+    const container = document.getElementById(`wineEditContainer-${wineIdx}`);
+    if (container) container.innerHTML = '';
+    const trigger = document.querySelector(`[data-edit-wine="${wineIdx}"]`);
+    if (trigger) trigger.style.display = '';
+  }
+
+  async function submitEdit(wineIdx) {
+    const h = loadHistory();
+    if (wineIdx < 0 || wineIdx >= h.length) return;
+    if (!apiKey) {
+      showError('Configura prima la chiave API.');
+      return;
+    }
+    const producer = document.getElementById(`editProducer-${wineIdx}`).value.trim();
+    const wineName = document.getElementById(`editWineName-${wineIdx}`).value.trim();
+    const vintageStr = document.getElementById(`editVintage-${wineIdx}`).value.trim();
+    const region = document.getElementById(`editRegion-${wineIdx}`).value.trim();
+    const country = document.getElementById(`editCountry-${wineIdx}`).value.trim();
+
+    // Validazioni minime
+    if (!wineName) {
+      showError('Il nome del vino è obbligatorio.');
+      return;
+    }
+    let vintage = null;
+    if (vintageStr) {
+      const v = parseInt(vintageStr, 10);
+      const currentYear = new Date().getFullYear();
+      if (isNaN(v) || v < 1900 || v > currentYear) {
+        showError(`L'annata deve essere un anno tra 1900 e ${currentYear}.`);
+        return;
+      }
+      vintage = v;
+    }
+
+    // Mostro stato "aggiornamento in corso"
+    const container = document.getElementById(`wineEditContainer-${wineIdx}`);
+    if (container) {
+      container.innerHTML = `
+        <div class="wine-edit-form">
+          <div class="wine-edit-loading">
+            Sto rigenerando la scheda<span class="wine-edit-loading-dots"><span></span><span></span><span></span></span>
+          </div>
+        </div>`;
+    }
+
+    try {
+      // Costruisco l'oggetto id come quello prodotto dalla fase 1
+      const editedId = {
+        producer: producer || null,
+        wineName: wineName,
+        vintage: vintage,
+        country: country || null,
+        region: region || null,
+        denomination: (h[wineIdx]._full && h[wineIdx]._full.denomination) || null
+      };
+
+      // Rilancio fase 2 con i dati corretti
+      const newDetails = await fetchWineDetails(editedId);
+
+      // Preservo le degustazioni esistenti del vino corrente
+      const existingTastings = (h[wineIdx]._full && h[wineIdx]._full.tastings) || [];
+      newDetails.tastings = existingTastings;
+
+      // Sovrascrivo i campi della voce nello storico
+      const updatedItem = {
+        producer: editedId.producer,
+        wineName: editedId.wineName,
+        vintage: editedId.vintage,
+        country: editedId.country,
+        region: editedId.region,
+        type: newDetails.type || null,
+        thumb: h[wineIdx].thumb || null,  // preservo la foto
+        savedAt: h[wineIdx].savedAt,      // preservo data primo salvataggio
+        updatedAt: Date.now(),             // marca della modifica
+        _full: newDetails
+      };
+
+      h[wineIdx] = updatedItem;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+      } catch (err) {
+        showError('Memoria piena: rimuovi qualche vino o degustazione per fare spazio.');
+        return;
+      }
+
+      // Re-render
+      renderHistory();
+      // Mantengo la card aperta (potrebbe essersi chiusa)
+      if (!expandedHistoryIndices.has(wineIdx)) {
+        expandedHistoryIndices.add(wineIdx);
+        renderHistory();
+      }
+    } catch (err) {
+      showError(`Errore nell'aggiornamento: ${err.message || 'rete'}. Riprova.`);
+      // Riapro il form per permettere retry
+      if (container) container.innerHTML = buildEditFormHTML(wineIdx);
+    }
+  }
+
+  // ==========================================================================
   // FINESTRA DI DEGUSTAZIONE
   // ==========================================================================
   // Per ogni vino con annata + agingPotential parsabile, stima una finestra
@@ -3313,11 +3776,11 @@ Regole:
     const vintage = parseInt(wine.vintage);
     if (!vintage || vintage < 1900 || vintage > 2100) return null;
     const fullData = wine._full || wine;
-    const window = parseAgingPotential(fullData.agingPotential, vintage);
-    if (!window) return null;
+    const drinkW = parseAgingPotential(fullData.agingPotential, vintage);
+    if (!drinkW) return null;
 
     const currentYear = new Date().getFullYear();
-    const totalArc = window.end - window.start;
+    const totalArc = drinkW.end - drinkW.start;
     if (totalArc <= 0) return null;
 
     // Posizione 0..1 dell'anno corrente nella finestra
@@ -3326,24 +3789,24 @@ Regole:
     let statusText;
     let statusClass;
 
-    if (currentYear < window.start) {
+    if (currentYear < drinkW.start) {
       // Prima della finestra: vino ancora giovane
-      pos = (currentYear - vintage) / Math.max(1, window.start - vintage);
+      pos = (currentYear - vintage) / Math.max(1, drinkW.start - vintage);
       pos = Math.max(0, pos) * 0.3; // Comprimo nello zone "wait"
       zone = 'wait';
-      const yearsToWait = window.start - currentYear;
+      const yearsToWait = drinkW.start - currentYear;
       statusText = yearsToWait === 1 ? 'manca un anno' : `mancano ${yearsToWait} anni`;
       statusClass = 'dw-young';
-    } else if (currentYear > window.end) {
+    } else if (currentYear > drinkW.end) {
       // Oltre la finestra
       pos = 1.05;
       zone = 'past';
-      const yearsPast = currentYear - window.end;
+      const yearsPast = currentYear - drinkW.end;
       statusText = yearsPast === 1 ? 'oltre la finestra di un anno' : `oltre la finestra di ${yearsPast} anni`;
       statusClass = 'dw-past';
     } else {
       // Dentro la finestra
-      const into = (currentYear - window.start) / totalArc;
+      const into = (currentYear - drinkW.start) / totalArc;
       // Mappo into [0..1] su pos [0.3..1] (zona dopo wait)
       pos = 0.3 + into * 0.7;
       if (into < 0.4) {
@@ -3362,8 +3825,8 @@ Regole:
     }
 
     return {
-      start: window.start,
-      end: window.end,
+      start: drinkW.start,
+      end: drinkW.end,
       vintage,
       currentYear,
       pos,           // posizione cursore [0..1.05]
@@ -3518,7 +3981,7 @@ Regole:
     historyContent.innerHTML = '<div class="history-grid">' + h.map((item, idx) => {
       const isOpen = expandedHistoryIndices.has(idx);
       const expandedHTML = (isOpen && item._full)
-        ? `<div class="history-card-expanded">${buildSchedaHTML(item._full, { inHistory: true })}${buildTastingsHTML(idx)}</div>`
+        ? `<div class="history-card-expanded">${buildSchedaHTML(item._full, { inHistory: true, wineIdx: idx })}${buildTastingsHTML(idx)}</div>`
         : '';
       return `
       <div class="history-card${isOpen ? ' open' : ''}" data-idx="${idx}">
@@ -3568,7 +4031,12 @@ Regole:
         if (!confirm('Rimuovere questo vino dalla cantina? Operazione irreversibile.')) return;
         const list = loadHistory();
         list.splice(idx, 1);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        } catch (err) {
+          showError('Errore nel salvataggio. La memoria potrebbe essere piena.');
+          return;
+        }
         // Riallineo gli indici espansi: tutti quelli > idx scendono di 1
         const newSet = new Set();
         expandedHistoryIndices.forEach(i => {
@@ -3617,14 +4085,57 @@ Regole:
   // Costo query successive (cache hit): ~$0.011 input + ~$0.008 output = ~$0.02
   //
   // Storia conversazione: ultimi 10 messaggi mantenuti per follow-up naturali.
-  // Reset alla chiusura del modal.
+  // Persistita in sessionStorage con timestamp: si ripristina all'apertura
+  // se la sessione precedente è recente (entro 30 minuti). Reset esplicito
+  // tramite pulsante "Nuova" nell'header.
   // ==========================================================================
+
+  const SOMMELIER_SESSION_KEY = 'sommelier_chat_session_v1';
+  const SOMMELIER_SESSION_TTL_MS = 30 * 60 * 1000; // 30 minuti
 
   const sommelierState = {
     history: [], // {role, content}
     isOpen: false,
     isSending: false
   };
+
+  function persistSommelierSession() {
+    if (!sommelierState.history.length) {
+      sessionStorage.removeItem(SOMMELIER_SESSION_KEY);
+      return;
+    }
+    try {
+      sessionStorage.setItem(SOMMELIER_SESSION_KEY, JSON.stringify({
+        history: sommelierState.history,
+        savedAt: Date.now()
+      }));
+    } catch (err) {
+      // Silenzioso: la persistenza è best-effort
+    }
+  }
+
+  function restoreSommelierSession() {
+    try {
+      const raw = sessionStorage.getItem(SOMMELIER_SESSION_KEY);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (!data || !Array.isArray(data.history) || !data.savedAt) return false;
+      // TTL: scarto se troppo vecchia
+      if (Date.now() - data.savedAt > SOMMELIER_SESSION_TTL_MS) {
+        sessionStorage.removeItem(SOMMELIER_SESSION_KEY);
+        return false;
+      }
+      sommelierState.history = data.history;
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function clearSommelierSession() {
+    sommelierState.history = [];
+    sessionStorage.removeItem(SOMMELIER_SESSION_KEY);
+  }
 
   function buildCantinaContext() {
     const h = loadHistory();
@@ -3815,6 +4326,8 @@ REGOLE COMPORTAMENTALI:
 
     // Aggiungo messaggio utente
     sommelierState.history.push({ role: 'user', content: text });
+    persistSommelierSession();
+    updateNewChatButton();
     renderSommelierThread();
     renderSommelierSuggestions();
 
@@ -3837,26 +4350,37 @@ REGOLE COMPORTAMENTALI:
 
       hideTyping();
 
+      // Se nel frattempo l'utente ha chiuso il modal, la conversazione è
+      // stata persistita: la risposta arriverebbe a una chat non più visibile.
+      // Scarto silenziosamente per evitare aggiunte fantasma alla prossima apertura.
+      if (!sommelierState.isOpen) return;
+
       // Aggiungo risposta
       sommelierState.history.push({ role: 'assistant', content: reply });
       // Cap storia a 20 messaggi (10 turn) per non far esplodere il context
       if (sommelierState.history.length > 20) {
         sommelierState.history = sommelierState.history.slice(-20);
       }
+      persistSommelierSession();
       renderSommelierThread();
     } catch (err) {
       hideTyping();
+      // Se l'utente ha chiuso, non insistere
+      if (!sommelierState.isOpen) return;
       // Rollback messaggio utente in caso di errore
       const errMsg = err.message || 'Errore di rete';
       sommelierState.history.push({
         role: 'assistant',
         content: `<p><em>Mi scuso, non sono riuscito a rispondere: ${escapeHTML(errMsg)}. Riprova tra qualche istante.</em></p>`
       });
+      persistSommelierSession();
       renderSommelierThread();
     } finally {
       sommelierState.isSending = false;
-      document.getElementById('sommelierSend').disabled = false;
-      input.focus();
+      const sendBtn = document.getElementById('sommelierSend');
+      if (sendBtn) sendBtn.disabled = false;
+      const inputEl = document.getElementById('sommelierInput');
+      if (inputEl && sommelierState.isOpen) inputEl.focus();
     }
   }
 
@@ -3864,6 +4388,11 @@ REGOLE COMPORTAMENTALI:
     const modal = document.getElementById('sommelierModal');
     modal.hidden = false;
     sommelierState.isOpen = true;
+    // Tento di ripristinare una sessione recente (entro 30 min)
+    if (!sommelierState.history.length) {
+      restoreSommelierSession();
+    }
+    updateNewChatButton();
     renderSommelierThread();
     renderSommelierSuggestions();
     setTimeout(() => document.getElementById('sommelierInput').focus(), 100);
@@ -3874,13 +4403,40 @@ REGOLE COMPORTAMENTALI:
     document.getElementById('sommelierModal').hidden = true;
     sommelierState.isOpen = false;
     document.body.style.overflow = '';
-    // Reset conversazione alla chiusura per ripartire fresh
-    sommelierState.history = [];
+    // Persisto la conversazione corrente: alla riapertura entro 30 minuti
+    // verrà ripristinata. Niente più reset aggressivo.
+    persistSommelierSession();
+    // Reset stato d'invio: se c'era una chiamata in volo, la sua risposta
+    // viene scartata dal check isOpen in sendSommelierMessage.
+    sommelierState.isSending = false;
+    const sendBtn = document.getElementById('sommelierSend');
+    if (sendBtn) sendBtn.disabled = false;
+  }
+
+  // Pulsante "Nuova": svuota la conversazione corrente e ricarica la chat
+  // come se fosse un primo accesso (mostra suggerimenti, niente storia).
+  function startNewSommelierChat() {
+    if (sommelierState.history.length > 0) {
+      if (!confirm('Iniziare una nuova conversazione? La chat corrente andrà persa.')) return;
+    }
+    clearSommelierSession();
+    updateNewChatButton();
+    renderSommelierThread();
+    renderSommelierSuggestions();
+    document.getElementById('sommelierInput').focus();
+  }
+
+  // Mostra il pulsante "Nuova" solo se c'è qualcosa da resettare
+  function updateNewChatButton() {
+    const btn = document.getElementById('sommelierNewChat');
+    if (!btn) return;
+    btn.hidden = sommelierState.history.length === 0;
   }
 
   // Bindings
   document.getElementById('askSommelierBtn').addEventListener('click', openSommelierModal);
   document.getElementById('sommelierClose').addEventListener('click', closeSommelierModal);
+  document.getElementById('sommelierNewChat').addEventListener('click', startNewSommelierChat);
   document.getElementById('sommelierSend').addEventListener('click', sendSommelierMessage);
   document.getElementById('sommelierInput').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -3892,10 +4448,6 @@ REGOLE COMPORTAMENTALI:
   document.getElementById('sommelierInput').addEventListener('input', e => {
     e.target.style.height = 'auto';
     e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
-  });
-  // Esc per chiudere
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && sommelierState.isOpen) closeSommelierModal();
   });
   // Click fuori dal contenuto chiude
   document.getElementById('sommelierModal').addEventListener('click', e => {
@@ -3924,6 +4476,30 @@ REGOLE COMPORTAMENTALI:
       if (deleteTasting(wineIdx, tastingId)) {
         renderHistory();
       }
+      return;
+    }
+    // Pulsante "Modifica" sulla card
+    const editBtn = e.target.closest('[data-edit-wine]');
+    if (editBtn) {
+      e.stopPropagation();
+      const idx = parseInt(editBtn.dataset.editWine);
+      openEditForm(idx);
+      return;
+    }
+    // Pulsante "Annulla" del form di modifica
+    const cancelEditBtn = e.target.closest('[data-cancel-edit]');
+    if (cancelEditBtn) {
+      e.stopPropagation();
+      const idx = parseInt(cancelEditBtn.dataset.cancelEdit);
+      closeEditForm(idx);
+      return;
+    }
+    // Pulsante "Aggiorna scheda" del form di modifica
+    const submitEditBtn = e.target.closest('[data-submit-edit]');
+    if (submitEditBtn) {
+      e.stopPropagation();
+      const idx = parseInt(submitEditBtn.dataset.submitEdit);
+      submitEdit(idx);
       return;
     }
   });
@@ -3967,10 +4543,14 @@ REGOLE COMPORTAMENTALI:
   document.getElementById('tastingModal').addEventListener('click', e => {
     if (e.target.id === 'tastingModal') closeTastingModal();
   });
-  // Esc chiude (solo se non è aperto sommelier)
+  // Esc chiude i modal aperti, con priorità: tasting (se aperto, sopra il sommelier) > sommelier
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && !document.getElementById('tastingModal').hidden && !sommelierState.isOpen) {
+    if (e.key !== 'Escape') return;
+    const tastingOpen = !document.getElementById('tastingModal').hidden;
+    if (tastingOpen) {
       closeTastingModal();
+    } else if (sommelierState.isOpen) {
+      closeSommelierModal();
     }
   });
 

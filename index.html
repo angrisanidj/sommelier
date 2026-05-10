@@ -15,7 +15,7 @@
 <!-- VERSIONE APP: incrementare ad ogni rilascio per forzare l'update     -->
 <!-- Formato: data ISO + numero progressivo                                -->
 <!-- ==================================================================== -->
-<meta name="app-version" content="2026.05.09-019">
+<meta name="app-version" content="2026.05.09-023">
 
 <!-- ===== PWA META TAGS ===== -->
 <meta name="description" content="Riconoscimento e scheda enciclopedica delle bottiglie di vino tramite intelligenza artificiale">
@@ -552,6 +552,13 @@
     color: var(--bordeaux-deep);
     line-height: 1.3;
   }
+  .wine-fact-range {
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+    margin-left: 4px;
+  }
   .section { margin-bottom: 36px; }
   .section-title {
     font-family: 'Special Elite', serif;
@@ -1046,6 +1053,516 @@
     font-style: italic;
     font-family: 'Cormorant Garamond', serif;
   }
+
+  /* ===== DIARIO DEGUSTAZIONI ===== */
+  .tasting-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(160,123,61,0.3);
+  }
+  .tasting-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tasting-section-title {
+    font-family: 'Special Elite', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin: 0;
+  }
+  .tasting-summary {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .tasting-summary strong {
+    color: var(--bordeaux);
+    font-weight: 600;
+  }
+  .tasting-add-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: rgba(160,123,61,0.06);
+    border: 1px dashed var(--gold);
+    color: var(--bordeaux-deep);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 16px;
+    font-style: italic;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 18px;
+  }
+  .tasting-add-btn:hover {
+    background: rgba(160,123,61,0.12);
+    border-style: solid;
+  }
+  .tasting-add-btn .tasting-add-icon {
+    font-family: 'IM Fell English', Georgia, serif;
+    color: var(--gold);
+    margin-right: 6px;
+    font-style: normal;
+  }
+  .tasting-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .tasting-entry {
+    padding: 16px 18px;
+    background: rgba(255,252,244,0.6);
+    border-left: 2px solid var(--gold);
+    position: relative;
+  }
+  .tasting-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .tasting-entry-date {
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-mute);
+  }
+  .tasting-entry-stars {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 16px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .tasting-entry-stars .star-empty { opacity: 0.25; }
+  .tasting-entry-context {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .tasting-entry-context-label {
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-right: 4px;
+  }
+  .tasting-entry-note {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .tasting-entry-delete {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: var(--ink-mute);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .tasting-entry:hover .tasting-entry-delete { opacity: 0.6; }
+  .tasting-entry-delete:hover { opacity: 1 !important; color: var(--bordeaux); }
+
+  /* Modal di registrazione */
+  .tasting-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(28, 14, 18, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease-out;
+  }
+  .tasting-modal-inner {
+    background: var(--paper);
+    width: 100%;
+    max-width: 540px;
+    max-height: 92vh;
+    overflow-y: auto;
+    border: 1px solid var(--rule);
+    box-shadow: 0 20px 60px rgba(74,18,25,0.3);
+    animation: slideUp 0.3s ease-out;
+  }
+  .tasting-modal-header {
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .tasting-modal-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 22px;
+    color: var(--bordeaux-deep);
+    margin: 0 0 4px;
+  }
+  .tasting-modal-subtitle {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .tasting-modal-close {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--ink-mute);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .tasting-modal-close:hover { color: var(--bordeaux); border-color: var(--rule); }
+  .tasting-modal-body {
+    padding: 22px 26px 26px;
+  }
+  .tasting-form-group {
+    margin-bottom: 20px;
+  }
+  .tasting-form-label {
+    display: block;
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .tasting-form-label .optional {
+    color: var(--ink-mute);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 11px;
+    font-style: italic;
+    margin-left: 6px;
+  }
+  .tasting-form-input,
+  .tasting-form-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--rule);
+    background: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 16px;
+    color: var(--ink);
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    transition: border-color 0.2s;
+  }
+  .tasting-form-textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.5;
+  }
+  .tasting-form-input:focus,
+  .tasting-form-textarea:focus {
+    outline: none;
+    border-color: var(--bordeaux);
+  }
+  .tasting-stars-input {
+    display: flex;
+    gap: 4px;
+  }
+  .tasting-star-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 28px;
+    color: var(--gold);
+    padding: 4px 6px;
+    transition: transform 0.15s;
+    opacity: 0.25;
+  }
+  .tasting-star-btn.active { opacity: 1; }
+  .tasting-star-btn:hover { transform: scale(1.15); }
+  .tasting-occasion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tasting-occasion-chip {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    background: rgba(160,123,61,0.06);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 0;
+  }
+  .tasting-occasion-chip.selected {
+    background: var(--gold);
+    color: var(--cream);
+    border-color: var(--gold);
+  }
+  .tasting-modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 8px;
+  }
+  .tasting-cancel-btn,
+  .tasting-save-btn {
+    padding: 11px 22px;
+    font-family: 'Special Elite', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.2s;
+  }
+  .tasting-cancel-btn {
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  .tasting-cancel-btn:hover { border-color: var(--bordeaux); color: var(--bordeaux); }
+  .tasting-save-btn {
+    background: var(--bordeaux);
+    border: 1px solid var(--bordeaux);
+    color: var(--cream);
+  }
+  .tasting-save-btn:hover { background: var(--bordeaux-deep); }
+  .tasting-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Sezione "Il tuo gusto" — pattern aggregati */
+  .taste-portrait {
+    margin-top: 48px;
+    padding: 28px 26px;
+    background: linear-gradient(135deg, rgba(92,26,31,0.04) 0%, rgba(160,123,61,0.06) 100%);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold);
+  }
+  .taste-portrait-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 24px;
+    color: var(--bordeaux-deep);
+    margin: 0 0 6px;
+  }
+  .taste-portrait-eyebrow {
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .taste-portrait-intro {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+  .taste-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .taste-stat {
+    padding: 14px 16px;
+    background: rgba(255,252,244,0.7);
+    border: 1px solid var(--rule);
+  }
+  .taste-stat-label {
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .taste-stat-value {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 17px;
+    color: var(--bordeaux-deep);
+    line-height: 1.3;
+  }
+  .taste-stat-detail {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  @media (min-width: 600px) {
+    .taste-stats { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ===== FINESTRA DI DEGUSTAZIONE ===== */
+  .drink-window {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(160,123,61,0.3);
+  }
+  .drink-window-label {
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .drink-window-status {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 12px;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+  .drink-window-status.dw-young { color: var(--ink-mute); }
+  .drink-window-status.dw-optimal { color: #2d6a3e; }
+  .drink-window-status.dw-drink-soon { color: #b8754a; }
+  .drink-window-status.dw-past { color: #8a3a2a; }
+  .drink-window-track {
+    position: relative;
+    height: 8px;
+    background: rgba(160,123,61,0.12);
+    border: 1px solid rgba(160,123,61,0.25);
+  }
+  .drink-window-zones {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+  .drink-window-zone-wait {
+    background: linear-gradient(90deg, rgba(160,123,61,0) 0%, rgba(160,123,61,0.2) 100%);
+  }
+  .drink-window-zone-optimal {
+    background: linear-gradient(90deg, rgba(45,106,62,0.25) 0%, rgba(45,106,62,0.4) 50%, rgba(45,106,62,0.25) 100%);
+  }
+  .drink-window-zone-soon {
+    background: linear-gradient(90deg, rgba(184,117,74,0.3) 0%, rgba(184,117,74,0.45) 100%);
+  }
+  .drink-window-cursor {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    background: var(--bordeaux-deep);
+    box-shadow: 0 0 0 1px rgba(255,252,244,0.6);
+    z-index: 2;
+    transition: left 0.6s ease-out;
+  }
+  .drink-window-cursor::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 10px;
+    height: 10px;
+    background: var(--bordeaux-deep);
+    border-radius: 50%;
+    border: 1px solid rgba(255,252,244,0.6);
+  }
+  .drink-window-cursor.cursor-past {
+    background: #8a3a2a;
+  }
+  .drink-window-cursor.cursor-past::before {
+    background: #8a3a2a;
+  }
+  .drink-window-years {
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Special Elite', monospace;
+    font-size: 9px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+
+  /* Notifica all'apertura — banner discreto sopra la cantina */
+  .window-alert-banner {
+    margin-bottom: 24px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(45,106,62,0.06) 0%, rgba(45,106,62,0.10) 100%);
+    border-left: 3px solid #2d6a3e;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .window-alert-banner:hover {
+    background: linear-gradient(135deg, rgba(45,106,62,0.10) 0%, rgba(45,106,62,0.14) 100%);
+    transform: translateX(2px);
+  }
+  .window-alert-banner.alert-soon {
+    background: linear-gradient(135deg, rgba(184,117,74,0.08) 0%, rgba(184,117,74,0.12) 100%);
+    border-left-color: #b8754a;
+  }
+  .window-alert-banner.alert-soon:hover {
+    background: linear-gradient(135deg, rgba(184,117,74,0.12) 0%, rgba(184,117,74,0.16) 100%);
+  }
+  .window-alert-icon {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 24px;
+    color: #2d6a3e;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .window-alert-banner.alert-soon .window-alert-icon { color: #b8754a; }
+  .window-alert-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .window-alert-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 16px;
+    color: var(--bordeaux-deep);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .window-alert-detail {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .window-alert-dismiss {
+    background: none;
+    border: none;
+    color: var(--ink-mute);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .window-alert-dismiss:hover { color: var(--bordeaux); }
+
   .history-card-expanded {
     padding: 24px 28px 32px;
     border-top: 1px solid var(--rule);
@@ -1082,6 +1599,292 @@
     background: var(--bordeaux);
     border-color: var(--bordeaux);
   }
+
+  /* ===== SOMMELIER CONVERSAZIONALE ===== */
+  .ask-sommelier-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+    padding: 22px 26px;
+    margin-bottom: 28px;
+    background: linear-gradient(135deg, rgba(92,26,31,0.04) 0%, rgba(160,123,61,0.06) 100%);
+    border: 1px solid var(--gold);
+    border-left-width: 3px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .ask-sommelier-btn:hover {
+    background: linear-gradient(135deg, rgba(92,26,31,0.07) 0%, rgba(160,123,61,0.10) 100%);
+    border-left-color: var(--bordeaux);
+    transform: translateX(2px);
+  }
+  .ask-sommelier-btn:active { transform: translateX(0); }
+  .ask-sommelier-icon {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 20px;
+    color: var(--gold);
+    position: absolute;
+    top: 18px;
+    right: 22px;
+  }
+  .ask-sommelier-text {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 22px;
+    color: var(--bordeaux-deep);
+    letter-spacing: 0.01em;
+  }
+  .ask-sommelier-sub {
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-mute);
+  }
+
+  /* Modal chat */
+  .sommelier-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(28, 14, 18, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .sommelier-modal-inner {
+    background: var(--paper);
+    width: 100%;
+    max-width: 720px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -20px 60px rgba(74,18,25,0.3);
+    animation: slideUp 0.3s ease-out;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @media (min-width: 720px) {
+    .sommelier-modal { align-items: center; padding: 40px 24px; }
+    .sommelier-modal-inner { height: 80vh; max-height: 760px; border: 1px solid var(--rule); }
+  }
+  @media (max-width: 719px) {
+    .sommelier-modal-inner { height: 100vh; height: 100dvh; }
+  }
+  .sommelier-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid var(--rule);
+    background: rgba(255,252,244,0.6);
+  }
+  .sommelier-header-eyebrow {
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .sommelier-header-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 24px;
+    color: var(--bordeaux-deep);
+    margin: 0;
+    font-weight: 500;
+  }
+  .sommelier-close {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--ink-mute);
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    border-radius: 0;
+  }
+  .sommelier-close:hover { color: var(--bordeaux); border-color: var(--rule); }
+
+  .sommelier-thread {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    scroll-behavior: smooth;
+  }
+  .sommelier-msg {
+    max-width: 88%;
+    padding: 14px 18px;
+    line-height: 1.55;
+    font-size: 15px;
+    animation: msgIn 0.3s ease-out;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .sommelier-msg-user {
+    align-self: flex-end;
+    background: var(--bordeaux);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 17px;
+  }
+  .sommelier-msg-bot {
+    align-self: flex-start;
+    background: rgba(255,252,244,0.85);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .sommelier-msg-bot strong { color: var(--bordeaux-deep); font-weight: 600; }
+  .sommelier-msg-bot em { color: var(--gold); font-style: italic; }
+  .sommelier-msg-bot p { margin: 0 0 10px; }
+  .sommelier-msg-bot p:last-child { margin-bottom: 0; }
+  .sommelier-msg-bot .wine-ref {
+    display: inline-block;
+    font-family: 'IM Fell English', Georgia, serif;
+    color: var(--bordeaux);
+    border-bottom: 1px dotted var(--gold);
+    cursor: default;
+  }
+  .sommelier-msg-typing {
+    align-self: flex-start;
+    padding: 14px 18px;
+    background: rgba(255,252,244,0.6);
+    border: 1px solid var(--rule);
+  }
+  .sommelier-msg-typing-dots {
+    display: flex;
+    gap: 5px;
+  }
+  .sommelier-msg-typing-dots span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: dotPulse 1.4s infinite ease-in-out;
+  }
+  .sommelier-msg-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .sommelier-msg-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotPulse {
+    0%, 60%, 100% { opacity: 0.3; transform: scale(0.85); }
+    30% { opacity: 1; transform: scale(1.1); }
+  }
+
+  .sommelier-suggestions {
+    padding: 0 26px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .sommelier-suggestion {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 14px;
+    font-style: italic;
+    background: rgba(160,123,61,0.08);
+    border: 1px solid var(--gold);
+    color: var(--bordeaux-deep);
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sommelier-suggestion:hover {
+    background: var(--gold);
+    color: var(--cream);
+  }
+
+  .sommelier-input-row {
+    display: flex;
+    gap: 10px;
+    padding: 16px 26px 22px;
+    border-top: 1px solid var(--rule);
+    background: rgba(255,252,244,0.6);
+    align-items: flex-end;
+  }
+  .sommelier-input {
+    flex: 1;
+    border: 1px solid var(--rule);
+    background: var(--cream);
+    padding: 12px 14px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 16px;
+    color: var(--ink);
+    resize: none;
+    max-height: 120px;
+    line-height: 1.4;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    transition: border-color 0.2s;
+  }
+  .sommelier-input:focus {
+    outline: none;
+    border-color: var(--bordeaux);
+  }
+  .sommelier-send {
+    background: var(--bordeaux);
+    color: var(--cream);
+    border: none;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .sommelier-send:hover:not(:disabled) { background: var(--bordeaux-deep); }
+  .sommelier-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .sommelier-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: var(--ink-mute);
+    padding: 40px 20px;
+  }
+  .sommelier-empty-icon {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 48px;
+    color: var(--gold);
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+  .sommelier-empty-text {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 400px;
+  }
+  .sommelier-empty-cantina-count {
+    margin-top: 12px;
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+  }
+
   @media (min-width: 700px) {
     .history-grid { grid-template-columns: repeat(2, 1fr); }
     .history-card.open { grid-column: 1 / -1; }
@@ -1210,7 +2013,89 @@
       <h2 class="history-title">Cantina <em>Personale</em></h2>
       <button class="history-clear" id="clearHistoryBtn">Svuota</button>
     </div>
+    <div id="windowAlertContainer"></div>
+    <button class="ask-sommelier-btn" id="askSommelierBtn" hidden>
+      <span class="ask-sommelier-icon">✦</span>
+      <span class="ask-sommelier-text">Chiedi al sommelier</span>
+      <span class="ask-sommelier-sub">consigli sulla tua cantina</span>
+    </button>
     <div id="historyContent"></div>
+    <div id="tastePortraitContainer"></div>
+  </div>
+
+  <!-- Modal: Sommelier conversazionale -->
+  <div class="sommelier-modal" id="sommelierModal" hidden>
+    <div class="sommelier-modal-inner">
+      <div class="sommelier-header">
+        <div class="sommelier-header-text">
+          <div class="sommelier-header-eyebrow">Casa Nuvola</div>
+          <h3 class="sommelier-header-title">Il Sommelier</h3>
+        </div>
+        <button class="sommelier-close" id="sommelierClose" aria-label="Chiudi">✕</button>
+      </div>
+      <div class="sommelier-thread" id="sommelierThread"></div>
+      <div class="sommelier-suggestions" id="sommelierSuggestions"></div>
+      <div class="sommelier-input-row">
+        <textarea class="sommelier-input" id="sommelierInput" rows="1" placeholder="Cosa apro stasera?" autocomplete="off"></textarea>
+        <button class="sommelier-send" id="sommelierSend" aria-label="Invia">↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Registrazione degustazione -->
+  <div class="tasting-modal" id="tastingModal" hidden>
+    <div class="tasting-modal-inner">
+      <div class="tasting-modal-header">
+        <div>
+          <h3 class="tasting-modal-title" id="tastingModalTitle">Registra degustazione</h3>
+          <div class="tasting-modal-subtitle" id="tastingModalSubtitle"></div>
+        </div>
+        <button class="tasting-modal-close" id="tastingModalClose" aria-label="Chiudi">✕</button>
+      </div>
+      <div class="tasting-modal-body">
+        <div class="tasting-form-group">
+          <label class="tasting-form-label">Data della degustazione</label>
+          <input type="date" class="tasting-form-input" id="tastingDate">
+        </div>
+        <div class="tasting-form-group">
+          <label class="tasting-form-label">Valutazione personale</label>
+          <div class="tasting-stars-input" id="tastingStars">
+            <button type="button" class="tasting-star-btn" data-star="1">★</button>
+            <button type="button" class="tasting-star-btn" data-star="2">★</button>
+            <button type="button" class="tasting-star-btn" data-star="3">★</button>
+            <button type="button" class="tasting-star-btn" data-star="4">★</button>
+            <button type="button" class="tasting-star-btn" data-star="5">★</button>
+          </div>
+        </div>
+        <div class="tasting-form-group">
+          <label class="tasting-form-label">Occasione <span class="optional">opzionale</span></label>
+          <div class="tasting-occasion-chips" id="tastingOccasions">
+            <button type="button" class="tasting-occasion-chip" data-occ="cena">cena</button>
+            <button type="button" class="tasting-occasion-chip" data-occ="pranzo">pranzo</button>
+            <button type="button" class="tasting-occasion-chip" data-occ="aperitivo">aperitivo</button>
+            <button type="button" class="tasting-occasion-chip" data-occ="ricorrenza">ricorrenza</button>
+            <button type="button" class="tasting-occasion-chip" data-occ="da soli">da soli</button>
+            <button type="button" class="tasting-occasion-chip" data-occ="regalo">regalo</button>
+          </div>
+        </div>
+        <div class="tasting-form-group">
+          <label class="tasting-form-label">Con chi <span class="optional">opzionale</span></label>
+          <input type="text" class="tasting-form-input" id="tastingCompany" placeholder="es. Marco e Anna" maxlength="80">
+        </div>
+        <div class="tasting-form-group">
+          <label class="tasting-form-label">Cosa accompagnava <span class="optional">opzionale</span></label>
+          <input type="text" class="tasting-form-input" id="tastingFood" placeholder="es. risotto ai funghi" maxlength="120">
+        </div>
+        <div class="tasting-form-group">
+          <label class="tasting-form-label">Note personali <span class="optional">opzionale</span></label>
+          <textarea class="tasting-form-textarea" id="tastingNote" placeholder="Cosa ti ha colpito? Come si è espresso? Lo riberresti?" maxlength="800"></textarea>
+        </div>
+        <div class="tasting-modal-footer">
+          <button class="tasting-cancel-btn" id="tastingCancelBtn">Annulla</button>
+          <button class="tasting-save-btn" id="tastingSaveBtn">Salva</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Pulsante impostazioni API: in fondo, discreto, accessibile solo quando serve cambiare chiave -->
@@ -1233,7 +2118,7 @@
   //  Modificare questa costante ad ogni rilascio.
   //  Convenzione: AAAA.MM.GG-NNN (data + numero progressivo)
   // ============================================================
-  const APP_VERSION = '2026.05.09-019';
+  const APP_VERSION = '2026.05.09-023';
 
   // Mostra la versione nel tag sotto l'intestazione
   document.getElementById('versionTag').textContent = 'v ' + APP_VERSION;
@@ -1572,6 +2457,7 @@ Schema (chiavi compatte, tutto in IT eccetto nomi propri):
 "hi":"2-3 frasi storia cantina/vino",
 "qs":int 70-100,
 "qn":"1-2 frasi: punteggi guide consultate (WS/Suckling/Vinous/GR), reputazione, riconoscimenti",
+"pr":{"avg":int prezzo_medio_in_euro_bottiglia_750ml_al_consumatore_in_Italia,"range":"forchetta es '25-40€'","src":"breve nota fonte (es 'Vivino, Tannico, sito produttore')"} oppure null se non verificabile,
 "ce":{"t":"biologico|biodinamico|in conversione|sostenibile|convenzionale|sconosciuto","d":"1-2 frasi dettagli (es 'Cert ICEA dal 2015')"},
 "bv":[{"y":"anno","r":"eccellente|ottimo|buono","n":"breve nota clima/stile"}],
 "vl":{"pl":"cantina|zona","n":"nome tenuta o comune (es. 'Barolo', 'Montalcino', 'Châteauneuf-du-Pape')","ad":"indirizzo postale completo se pl=cantina, else null","la":latitudine_decimale_NORD_positivo_es_44.6177,"lg":longitudine_decimale_EST_positivo_es_11.2744},
@@ -1585,6 +2471,7 @@ Regole:
 - so: 2-4 fonti effettivamente consultate.
 - qs: media punteggi reali se trovati (WS/Suckling/Vinous), altrimenti stima da reputazione. 70-79=accettabile, 80-84=buono, 85-89=ottimo, 90-94=eccellente, 95-100=eccezionale.
 - ce: solo se certificazione documentata in fonti, altrimenti t='sconosciuto'.
+- pr: prezzo medio al consumatore in Italia, IVA inclusa, formato bottiglia 750ml standard. Cerca su Vivino, Tannico, Callmewine, Bernabei, Xtrawine o sito produttore. Se la stessa etichetta ha più annate con prezzi diversi, usa la media o l'annata più recente disponibile. Se vino raro/da asta o non in vendita al dettaglio, usa null.
 - bv: 4-5 annate eccellenti ultimi 10-15 anni per la denominazione (minimo 4, mai meno).
 - vl.pl='cantina' SOLO con indirizzo certo da fonte ufficiale; in dubbio usa 'zona'.
 - COORDINATE CRITICO: verifica che lat/lng identifichino un punto sulla TERRAFERMA in una ZONA VITIVINICOLA REALE. NON inventare coordinate. Per Italia: lat 36-47, lng 6-19. Per Francia continentale: lat 42-51, lng -5 a 8. Per Spagna: lat 36-44, lng -10 a 4. Per Germania: lat 47-55, lng 6-15. Se non sei certo delle coordinate esatte, usa quelle del comune principale verificate da Wikipedia/OSM. MAI restituire coordinate in mare, in aree non vitivinicole, o invertite (lng al posto di lat).`;
@@ -1615,6 +2502,7 @@ Regole:
       history: c.hi,
       qualityScore: c.qs,
       qualityNotes: c.qn,
+      price: c.pr ? { avg: c.pr.avg, range: c.pr.range, source: c.pr.src } : null,
       certification: c.ce ? { type: c.ce.t, details: c.ce.d } : null,
       bestVintages: c.bv ? c.bv.map(v => ({ year: v.y, rating: v.r, note: v.n })) : null,
       vineyardLocation: c.vl ? {
@@ -1799,10 +2687,18 @@ Regole:
     if (d.agingPotential) facts.push(['Invecchiamento', d.agingPotential]);
     if (d.denomination) facts.push(['Denominazione', d.denomination]);
     if (d.region) facts.push(['Regione', d.region]);
+    if (d.price && typeof d.price.avg === 'number' && d.price.avg > 0) {
+      const priceFmt = d.price.range
+        ? `~${d.price.avg}€ <span class="wine-fact-range">(${escapeHTML(d.price.range)})</span>`
+        : `~${d.price.avg}€`;
+      facts.push(['Prezzo medio', priceFmt, true]);
+    }
 
-    const factsHTML = facts.map(([l, v]) =>
-      `<div class="wine-fact"><div class="wine-fact-label">${escapeHTML(l)}</div><div class="wine-fact-value">${escapeHTML(v)}</div></div>`
-    ).join('');
+    const factsHTML = facts.map(item => {
+      const [l, v, isHTML] = item;
+      const valueHTML = isHTML ? v : escapeHTML(v);
+      return `<div class="wine-fact"><div class="wine-fact-label">${escapeHTML(l)}</div><div class="wine-fact-value">${valueHTML}</div></div>`;
+    }).join('');
 
     // ===== INDICATORE DI QUALITÀ =====
     let qualityHTML = '';
@@ -2034,8 +2930,587 @@ Regole:
   // Set di indici di card storico attualmente espanse (in memoria, non persistito)
   const expandedHistoryIndices = new Set();
 
+  // ==========================================================================
+  // DIARIO DEGUSTAZIONI
+  // ==========================================================================
+  // Ogni vino in cantina può avere zero o più degustazioni registrate.
+  // Le degustazioni vivono in `_full.tastings` come array di oggetti:
+  // { id, date, stars, occasion, company, food, note, createdAt }
+  //
+  // Persistenza: dentro la struttura del vino in localStorage. Si perdono
+  // se l'utente svuota la cantina (coerente con l'idea di diario legato
+  // alle bottiglie possedute).
+  // ==========================================================================
+
+  function generateTastingId() {
+    return 'tst_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 5);
+  }
+
+  function getTastings(wineIdx) {
+    const h = loadHistory();
+    if (wineIdx < 0 || wineIdx >= h.length) return [];
+    const wine = h[wineIdx];
+    return (wine._full && wine._full.tastings) || [];
+  }
+
+  function saveTasting(wineIdx, tasting) {
+    const h = loadHistory();
+    if (wineIdx < 0 || wineIdx >= h.length) return false;
+    if (!h[wineIdx]._full) h[wineIdx]._full = {};
+    if (!h[wineIdx]._full.tastings) h[wineIdx]._full.tastings = [];
+    h[wineIdx]._full.tastings.unshift(tasting);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+      return true;
+    } catch (e) {
+      showError('Memoria piena: rimuovi qualche vino o degustazione.');
+      return false;
+    }
+  }
+
+  function deleteTasting(wineIdx, tastingId) {
+    const h = loadHistory();
+    if (wineIdx < 0 || wineIdx >= h.length) return false;
+    if (!h[wineIdx]._full || !h[wineIdx]._full.tastings) return false;
+    h[wineIdx]._full.tastings = h[wineIdx]._full.tastings.filter(t => t.id !== tastingId);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+      return true;
+    } catch { return false; }
+  }
+
+  function formatTastingDate(isoDate) {
+    if (!isoDate) return '';
+    const d = new Date(isoDate);
+    if (isNaN(d.getTime())) return isoDate;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const target = new Date(d);
+    target.setHours(0,0,0,0);
+    const diffDays = Math.round((today - target) / (1000*60*60*24));
+    if (diffDays === 0) return 'oggi';
+    if (diffDays === 1) return 'ieri';
+    if (diffDays > 1 && diffDays < 7) return `${diffDays} giorni fa`;
+    if (diffDays >= 7 && diffDays < 30) {
+      const w = Math.round(diffDays / 7);
+      return w === 1 ? 'una settimana fa' : `${w} settimane fa`;
+    }
+    const months = ['gennaio','febbraio','marzo','aprile','maggio','giugno',
+                    'luglio','agosto','settembre','ottobre','novembre','dicembre'];
+    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  function buildStarsHTML(stars) {
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+      html += i <= stars ? '★' : '<span class="star-empty">★</span>';
+    }
+    return html;
+  }
+
+  function buildTastingsHTML(wineIdx) {
+    const tastings = getTastings(wineIdx);
+    const count = tastings.length;
+    let summaryText = '';
+    if (count > 0) {
+      const avg = tastings.reduce((s, t) => s + (t.stars || 0), 0) / count;
+      const avgStr = avg.toFixed(1).replace('.', ',');
+      if (count === 1) {
+        summaryText = `1 degustazione registrata`;
+      } else {
+        summaryText = `${count} degustazioni · voto medio <strong>${avgStr}</strong>`;
+      }
+    }
+    const listHTML = tastings.map(t => {
+      const occBits = [];
+      if (t.occasion) occBits.push(`<span class="tasting-entry-context-label">${escapeHTML(t.occasion)}</span>`);
+      if (t.company) occBits.push(`con ${escapeHTML(t.company)}`);
+      if (t.food) occBits.push(`accompagnando ${escapeHTML(t.food)}`);
+      const ctxHTML = occBits.length ? `<div class="tasting-entry-context">${occBits.join(' · ')}</div>` : '';
+      const noteHTML = t.note ? `<div class="tasting-entry-note">${escapeHTML(t.note)}</div>` : '';
+      return `
+        <div class="tasting-entry" data-tasting-id="${escapeHTML(t.id)}">
+          <button class="tasting-entry-delete" data-del-tasting="${escapeHTML(t.id)}" data-wine-idx="${wineIdx}" title="Rimuovi">✕</button>
+          <div class="tasting-entry-header">
+            <span class="tasting-entry-date">${escapeHTML(formatTastingDate(t.date))}</span>
+            <span class="tasting-entry-stars">${buildStarsHTML(t.stars || 0)}</span>
+          </div>
+          ${ctxHTML}
+          ${noteHTML}
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="tasting-section">
+        <div class="tasting-section-header">
+          <h4 class="tasting-section-title">Le tue degustazioni</h4>
+          ${summaryText ? `<div class="tasting-summary">${summaryText}</div>` : ''}
+        </div>
+        <button class="tasting-add-btn" data-add-tasting="${wineIdx}">
+          <span class="tasting-add-icon">+</span> Registra una degustazione
+        </button>
+        ${count > 0 ? `<div class="tasting-list">${listHTML}</div>` : ''}
+      </div>`;
+  }
+
+  // Stato del modal degustazione
+  const tastingState = {
+    wineIdx: -1,
+    selectedStars: 0,
+    selectedOccasion: null
+  };
+
+  function openTastingModal(wineIdx) {
+    const h = loadHistory();
+    if (wineIdx < 0 || wineIdx >= h.length) return;
+    const wine = h[wineIdx];
+    tastingState.wineIdx = wineIdx;
+    tastingState.selectedStars = 0;
+    tastingState.selectedOccasion = null;
+    // Reset form
+    const today = new Date();
+    const isoDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    document.getElementById('tastingDate').value = isoDate;
+    document.getElementById('tastingCompany').value = '';
+    document.getElementById('tastingFood').value = '';
+    document.getElementById('tastingNote').value = '';
+    document.querySelectorAll('.tasting-star-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tasting-occasion-chip').forEach(b => b.classList.remove('selected'));
+    // Setup titolo
+    const wineName = `${wine.producer || ''} – ${wine.wineName || ''}`.replace(/^– /, '').replace(/ –$/, '');
+    document.getElementById('tastingModalSubtitle').textContent = wineName + (wine.vintage ? ` ${wine.vintage}` : '');
+    // Show
+    document.getElementById('tastingModal').hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeTastingModal() {
+    document.getElementById('tastingModal').hidden = true;
+    document.body.style.overflow = '';
+    tastingState.wineIdx = -1;
+  }
+
+  function submitTasting() {
+    if (tastingState.wineIdx < 0) return;
+    const date = document.getElementById('tastingDate').value;
+    const stars = tastingState.selectedStars;
+    if (!date) {
+      showError('Seleziona una data per la degustazione.');
+      return;
+    }
+    const tasting = {
+      id: generateTastingId(),
+      date,
+      stars,
+      occasion: tastingState.selectedOccasion,
+      company: document.getElementById('tastingCompany').value.trim() || null,
+      food: document.getElementById('tastingFood').value.trim() || null,
+      note: document.getElementById('tastingNote').value.trim() || null,
+      createdAt: Date.now()
+    };
+    if (saveTasting(tastingState.wineIdx, tasting)) {
+      closeTastingModal();
+      renderHistory();
+      // Riapro la card del vino se non lo è
+      if (!expandedHistoryIndices.has(tastingState.wineIdx)) {
+        expandedHistoryIndices.add(tastingState.wineIdx);
+        renderHistory();
+      }
+    }
+  }
+
+  // ==========================================================================
+  // RITRATTO DEL GUSTO — pattern aggregati dalle degustazioni
+  // ==========================================================================
+  function computeTastePortrait() {
+    const h = loadHistory();
+    const allTastings = [];
+    h.forEach((wine, idx) => {
+      const ts = (wine._full && wine._full.tastings) || [];
+      ts.forEach(t => allTastings.push({ tasting: t, wine }));
+    });
+    if (allTastings.length < 5) return null; // Soglia minima
+
+    // Vini "amati": voto >= 4
+    const beloved = allTastings.filter(x => (x.tasting.stars || 0) >= 4);
+    if (!beloved.length) {
+      return { totalTastings: allTastings.length, hasFavorites: false };
+    }
+
+    // Aggregatori
+    const grapesCount = {};
+    const regionsCount = {};
+    let alcoholSum = 0, alcoholCount = 0;
+    let priceSum = 0, priceCount = 0;
+    beloved.forEach(({ wine }) => {
+      const f = wine._full || {};
+      if (f.grapes) f.grapes.forEach(g => {
+        grapesCount[g] = (grapesCount[g] || 0) + 1;
+      });
+      if (wine.region) regionsCount[wine.region] = (regionsCount[wine.region] || 0) + 1;
+      else if (wine.country) regionsCount[wine.country] = (regionsCount[wine.country] || 0) + 1;
+      if (f.alcohol) {
+        const m = f.alcohol.match(/(\d+(?:[,.]\d+)?)/);
+        if (m) {
+          const v = parseFloat(m[1].replace(',', '.'));
+          if (v >= 5 && v <= 25) { alcoholSum += v; alcoholCount++; }
+        }
+      }
+      if (f.price && typeof f.price.avg === 'number' && f.price.avg > 0) {
+        priceSum += f.price.avg;
+        priceCount++;
+      }
+    });
+
+    // Top vitigno
+    const topGrape = Object.entries(grapesCount).sort((a,b) => b[1]-a[1])[0];
+    const topRegion = Object.entries(regionsCount).sort((a,b) => b[1]-a[1])[0];
+
+    // Ultima degustazione
+    const lastTasting = allTastings.sort((a,b) => (b.tasting.createdAt||0)-(a.tasting.createdAt||0))[0];
+    const lastWineName = `${lastTasting.wine.producer || ''} – ${lastTasting.wine.wineName || ''}`.replace(/^– /, '').replace(/ –$/, '');
+
+    return {
+      totalTastings: allTastings.length,
+      belovedCount: beloved.length,
+      hasFavorites: true,
+      topGrape: topGrape ? { name: topGrape[0], count: topGrape[1] } : null,
+      topRegion: topRegion ? { name: topRegion[0], count: topRegion[1] } : null,
+      avgAlcohol: alcoholCount > 0 ? (alcoholSum / alcoholCount).toFixed(1).replace('.', ',') : null,
+      avgPrice: priceCount > 0 ? Math.round(priceSum / priceCount) : null,
+      lastTasting: { wineName: lastWineName, date: lastTasting.tasting.date, stars: lastTasting.tasting.stars }
+    };
+  }
+
+  function renderTastePortrait() {
+    const container = document.getElementById('tastePortraitContainer');
+    if (!container) return;
+    const p = computeTastePortrait();
+    if (!p) {
+      container.innerHTML = '';
+      return;
+    }
+    if (!p.hasFavorites) {
+      container.innerHTML = `
+        <div class="taste-portrait">
+          <div class="taste-portrait-eyebrow">Il tuo gusto</div>
+          <h3 class="taste-portrait-title">Il ritratto sta ancora prendendo forma</h3>
+          <div class="taste-portrait-intro">Hai registrato ${p.totalTastings} degustazioni. Quando inizierai a dare voti alti (4 o 5 stelle) ai tuoi vini preferiti, qui apparirà un ritratto del tuo gusto.</div>
+        </div>`;
+      return;
+    }
+    const stats = [];
+    if (p.topGrape) {
+      stats.push({
+        label: 'Vitigno preferito',
+        value: escapeHTML(p.topGrape.name),
+        detail: p.topGrape.count > 1 ? `apprezzato in ${p.topGrape.count} vini` : 'tra i tuoi favoriti'
+      });
+    }
+    if (p.topRegion) {
+      stats.push({
+        label: 'Regione del cuore',
+        value: escapeHTML(p.topRegion.name),
+        detail: p.topRegion.count > 1 ? `${p.topRegion.count} bottiglie amate` : 'è ricorrente nei tuoi voti alti'
+      });
+    }
+    if (p.avgAlcohol) {
+      stats.push({
+        label: 'Gradazione tipica',
+        value: `${p.avgAlcohol}%`,
+        detail: 'media dei tuoi preferiti'
+      });
+    }
+    if (p.avgPrice) {
+      stats.push({
+        label: 'Fascia di prezzo',
+        value: `~${p.avgPrice}€`,
+        detail: 'media dei vini che ami'
+      });
+    }
+    if (p.lastTasting) {
+      stats.push({
+        label: 'Ultima degustazione',
+        value: escapeHTML(p.lastTasting.wineName),
+        detail: `${formatTastingDate(p.lastTasting.date)}${p.lastTasting.stars ? ' · ' + buildStarsHTML(p.lastTasting.stars) : ''}`
+      });
+    }
+    const statsHTML = stats.map(s => `
+      <div class="taste-stat">
+        <div class="taste-stat-label">${escapeHTML(s.label)}</div>
+        <div class="taste-stat-value">${s.value}</div>
+        <div class="taste-stat-detail">${s.detail}</div>
+      </div>`).join('');
+    container.innerHTML = `
+      <div class="taste-portrait">
+        <div class="taste-portrait-eyebrow">Il tuo gusto</div>
+        <h3 class="taste-portrait-title">Un ritratto in bottiglia</h3>
+        <div class="taste-portrait-intro">Hai registrato ${p.totalTastings} degustazioni di cui ${p.belovedCount} con voto alto. Ecco cosa raccontano i tuoi gusti.</div>
+        <div class="taste-stats">${statsHTML}</div>
+      </div>`;
+  }
+
+  // ==========================================================================
+  // FINESTRA DI DEGUSTAZIONE
+  // ==========================================================================
+  // Per ogni vino con annata + agingPotential parsabile, stima una finestra
+  // [startYear, endYear] e divide la vita in tre zone:
+  //   - "ancora giovane"   (primo 30%)  → da aspettare
+  //   - "finestra ottimale" (centrale 40%) → da bere serenamente
+  //   - "da bere subito"    (ultimo 30%)  → al picco discendente
+  //   - "oltre la finestra" se anno corrente > endYear
+  //
+  // Il calcolo è basato su euristiche enologiche grossolane ma onesti: i dati
+  // disponibili non permettono precisione assoluta. L'indicatore è un
+  // suggerimento, non una verità assoluta.
+  // ==========================================================================
+
+  function parseAgingPotential(s, vintage) {
+    if (!s || typeof s !== 'string' || !vintage) return null;
+    const txt = s.toLowerCase().trim();
+
+    // "fino al 2030" o "fino al 2035-2040"
+    let m = txt.match(/fino al (\d{4})(?:[\s-]+(\d{4}))?/);
+    if (m) {
+      const end = parseInt(m[2] || m[1]);
+      if (end > vintage && end < vintage + 80) {
+        // Stima inizio: vintage + 20% dell'arco totale
+        const arc = end - vintage;
+        return { start: vintage + Math.round(arc * 0.2), end };
+      }
+    }
+
+    // "10-15 anni" o "5-10 anni dalla vendemmia"
+    m = txt.match(/(\d+)[\s-]+(\d+)\s*ann/);
+    if (m) {
+      const min = parseInt(m[1]);
+      const max = parseInt(m[2]);
+      if (min < max && max < 80) {
+        return { start: vintage + min, end: vintage + max };
+      }
+    }
+
+    // "10+ anni" o "oltre 15 anni"
+    m = txt.match(/(?:oltre\s+)?(\d+)\+?\s*ann/);
+    if (m) {
+      const min = parseInt(m[1]);
+      if (min > 0 && min < 50) {
+        // Stima conservativa: dura altri 8-10 anni dopo la soglia
+        return { start: vintage + Math.round(min * 0.5), end: vintage + min + 8 };
+      }
+    }
+
+    // "pronto da bere" / "da consumare giovane" / simili
+    if (/pronto|giovane|imm[eé]diato|fresc/i.test(txt)) {
+      return { start: vintage + 1, end: vintage + 3 };
+    }
+
+    return null;
+  }
+
+  function computeDrinkWindow(wine) {
+    if (!wine || !wine.vintage) return null;
+    const vintage = parseInt(wine.vintage);
+    if (!vintage || vintage < 1900 || vintage > 2100) return null;
+    const fullData = wine._full || wine;
+    const window = parseAgingPotential(fullData.agingPotential, vintage);
+    if (!window) return null;
+
+    const currentYear = new Date().getFullYear();
+    const totalArc = window.end - window.start;
+    if (totalArc <= 0) return null;
+
+    // Posizione 0..1 dell'anno corrente nella finestra
+    let pos;
+    let zone;
+    let statusText;
+    let statusClass;
+
+    if (currentYear < window.start) {
+      // Prima della finestra: vino ancora giovane
+      pos = (currentYear - vintage) / Math.max(1, window.start - vintage);
+      pos = Math.max(0, pos) * 0.3; // Comprimo nello zone "wait"
+      zone = 'wait';
+      const yearsToWait = window.start - currentYear;
+      statusText = yearsToWait === 1 ? 'manca un anno' : `mancano ${yearsToWait} anni`;
+      statusClass = 'dw-young';
+    } else if (currentYear > window.end) {
+      // Oltre la finestra
+      pos = 1.05;
+      zone = 'past';
+      const yearsPast = currentYear - window.end;
+      statusText = yearsPast === 1 ? 'oltre la finestra di un anno' : `oltre la finestra di ${yearsPast} anni`;
+      statusClass = 'dw-past';
+    } else {
+      // Dentro la finestra
+      const into = (currentYear - window.start) / totalArc;
+      // Mappo into [0..1] su pos [0.3..1] (zona dopo wait)
+      pos = 0.3 + into * 0.7;
+      if (into < 0.4) {
+        zone = 'optimal-early';
+        statusText = 'finestra ottimale';
+        statusClass = 'dw-optimal';
+      } else if (into < 0.7) {
+        zone = 'optimal-peak';
+        statusText = 'al meglio della forma';
+        statusClass = 'dw-optimal';
+      } else {
+        zone = 'soon';
+        statusText = 'da bere serenamente';
+        statusClass = 'dw-drink-soon';
+      }
+    }
+
+    return {
+      start: window.start,
+      end: window.end,
+      vintage,
+      currentYear,
+      pos,           // posizione cursore [0..1.05]
+      zone,
+      statusText,
+      statusClass
+    };
+  }
+
+  function buildDrinkWindowHTML(wine) {
+    const w = computeDrinkWindow(wine);
+    if (!w) return '';
+    const cursorPos = Math.min(100, Math.max(0, w.pos * 100));
+    const cursorClass = w.zone === 'past' ? ' cursor-past' : '';
+    return `
+      <div class="drink-window">
+        <div class="drink-window-label">
+          <span>Finestra di degustazione</span>
+          <span class="drink-window-status ${w.statusClass}">${escapeHTML(w.statusText)}</span>
+        </div>
+        <div class="drink-window-track">
+          <div class="drink-window-zones">
+            <div class="drink-window-zone-wait" style="width: 30%"></div>
+            <div class="drink-window-zone-optimal" style="width: 40%"></div>
+            <div class="drink-window-zone-soon" style="width: 30%"></div>
+          </div>
+          <div class="drink-window-cursor${cursorClass}" style="left: ${cursorPos}%"></div>
+        </div>
+        <div class="drink-window-years">
+          <span>${w.vintage}</span>
+          <span>${w.start}</span>
+          <span>${w.end}</span>
+        </div>
+      </div>`;
+  }
+
+  // ===== ALERT: vini che richiedono attenzione =====
+  // Calcolato all'apertura dell'app. Mostra UN banner principale prioritario:
+  // 1. Vini "oltre la finestra" (urgente)
+  // 2. Vini "da bere serenamente" (entro 1-2 anni)
+  // 3. Vini entrati nella finestra ottimale di recente (notizia bella)
+  function computeWindowAlerts() {
+    const h = loadHistory();
+    if (!h.length) return null;
+    const past = [];
+    const drinkSoon = [];
+    const recentlyOptimal = [];
+    h.forEach((item, idx) => {
+      const w = computeDrinkWindow(item);
+      if (!w) return;
+      if (w.zone === 'past') past.push({ item, idx, w });
+      else if (w.zone === 'soon') drinkSoon.push({ item, idx, w });
+      else if ((w.zone === 'optimal-early' || w.zone === 'optimal-peak') &&
+               w.currentYear - w.start <= 1) {
+        recentlyOptimal.push({ item, idx, w });
+      }
+    });
+    if (past.length) return { type: 'past', wines: past };
+    if (drinkSoon.length) return { type: 'soon', wines: drinkSoon };
+    if (recentlyOptimal.length) return { type: 'optimal', wines: recentlyOptimal };
+    return null;
+  }
+
+  function renderWindowAlert() {
+    const container = document.getElementById('windowAlertContainer');
+    if (!container) return;
+    // Rispetta dismissal: una volta dismesso lo stesso giorno, non riappare
+    const dismissedToday = localStorage.getItem('windowAlertDismissed') === todayStamp();
+    if (dismissedToday) {
+      container.innerHTML = '';
+      return;
+    }
+    const alert = computeWindowAlerts();
+    if (!alert) {
+      container.innerHTML = '';
+      return;
+    }
+    let title, detail, klass, icon;
+    const n = alert.wines.length;
+    const firstName = `${alert.wines[0].item.producer || ''} ${alert.wines[0].item.wineName || ''}`.trim();
+    if (alert.type === 'past') {
+      icon = '⚠';
+      klass = 'alert-soon';
+      title = n === 1
+        ? `Una bottiglia oltre la finestra: ${escapeHTML(firstName)}`
+        : `${n} bottiglie hanno superato la finestra di degustazione`;
+      detail = n === 1
+        ? `Considerane l'apertura presto, prima che perda struttura.`
+        : `Apri queste bottiglie nelle prossime settimane.`;
+    } else if (alert.type === 'soon') {
+      icon = '◈';
+      klass = 'alert-soon';
+      title = n === 1
+        ? `${escapeHTML(firstName)} è da bere serenamente`
+        : `${n} bottiglie sono al loro plateau finale`;
+      detail = `Sono nel terzo finale della loro finestra: hanno raggiunto il picco e iniziano la discesa.`;
+    } else {
+      icon = '✦';
+      klass = '';
+      title = n === 1
+        ? `${escapeHTML(firstName)} è entrato nella finestra ottimale`
+        : `${n} bottiglie sono entrate nella finestra ottimale`;
+      detail = `È il momento giusto per aprirle senza fretta né ritardi.`;
+    }
+    container.innerHTML = `
+      <div class="window-alert-banner ${klass}" data-alert-idx="${alert.wines[0].idx}">
+        <span class="window-alert-icon">${icon}</span>
+        <div class="window-alert-content">
+          <div class="window-alert-title">${title}</div>
+          <div class="window-alert-detail">${detail}</div>
+        </div>
+        <button class="window-alert-dismiss" id="windowAlertDismiss" title="Nascondi per oggi">✕</button>
+      </div>`;
+    // Click sul banner: scroll alla card
+    container.querySelector('.window-alert-banner').addEventListener('click', e => {
+      if (e.target.id === 'windowAlertDismiss') return;
+      const idx = parseInt(container.querySelector('.window-alert-banner').dataset.alertIdx);
+      // Apre la card e scrolla
+      if (!expandedHistoryIndices.has(idx)) {
+        expandedHistoryIndices.add(idx);
+        renderHistory();
+      }
+      setTimeout(() => {
+        const card = historyContent.querySelector(`.history-card[data-idx="${idx}"]`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    });
+    // Dismiss
+    document.getElementById('windowAlertDismiss').addEventListener('click', e => {
+      e.stopPropagation();
+      localStorage.setItem('windowAlertDismissed', todayStamp());
+      container.innerHTML = '';
+    });
+  }
+
+  function todayStamp() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
   function renderHistory() {
     const h = loadHistory();
+    // Pulsante "Chiedi al sommelier": visibile solo con almeno 2 vini (sotto è inutile)
+    const askBtn = document.getElementById('askSommelierBtn');
+    if (askBtn) askBtn.hidden = h.length < 2;
+    // Alert finestra di degustazione
+    renderWindowAlert();
     if (!h.length) {
       historyContent.innerHTML = '<div class="history-empty">La tua cantina è ancora vuota. Scansiona la prima bottiglia per iniziare.</div>';
       return;
@@ -2043,7 +3518,7 @@ Regole:
     historyContent.innerHTML = '<div class="history-grid">' + h.map((item, idx) => {
       const isOpen = expandedHistoryIndices.has(idx);
       const expandedHTML = (isOpen && item._full)
-        ? `<div class="history-card-expanded">${buildSchedaHTML(item._full, { inHistory: true })}</div>`
+        ? `<div class="history-card-expanded">${buildSchedaHTML(item._full, { inHistory: true })}${buildTastingsHTML(idx)}</div>`
         : '';
       return `
       <div class="history-card${isOpen ? ' open' : ''}" data-idx="${idx}">
@@ -2056,6 +3531,7 @@ Regole:
             <div class="history-card-meta">
               ${item.vintage ? escapeHTML(String(item.vintage)) + ' · ' : ''}${escapeHTML(item.region || item.country || '')}
             </div>
+            ${buildDrinkWindowHTML(item)}
           </div>
         </div>
         ${expandedHTML}
@@ -2104,6 +3580,9 @@ Regole:
         renderHistory();
       });
     });
+
+    // Aggiorno il ritratto del gusto in base allo stato corrente delle degustazioni
+    renderTastePortrait();
   }
 
   clearHistoryBtn.addEventListener('click', () => {
@@ -2125,6 +3604,375 @@ Regole:
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[c]));
   }
+
+  // ==========================================================================
+  // SOMMELIER CONVERSAZIONALE
+  // ==========================================================================
+  // Modello: Sonnet 4.5 (necessario per ragionamento multi-vino e sintesi
+  // motivata). System prompt cacheabile (cantina invariata in conversazione)
+  // riduce input cost del 90% dalla 2a domanda in poi.
+  //
+  // Cantina compatta: per 60 vini max, ~600 token/vino → ~36k token system.
+  // Costo prima query: ~$0.11 input + ~$0.008 output = ~$0.12
+  // Costo query successive (cache hit): ~$0.011 input + ~$0.008 output = ~$0.02
+  //
+  // Storia conversazione: ultimi 10 messaggi mantenuti per follow-up naturali.
+  // Reset alla chiusura del modal.
+  // ==========================================================================
+
+  const sommelierState = {
+    history: [], // {role, content}
+    isOpen: false,
+    isSending: false
+  };
+
+  function buildCantinaContext() {
+    const h = loadHistory();
+    if (!h.length) return null;
+    // Compatto ogni vino in stringa compressa: solo dati utili per ragionare.
+    // Niente fonti, niente bestVintages, niente coordinate (irrilevanti per scelte).
+    const currentYear = new Date().getFullYear();
+    const compactWines = h.map((item, idx) => {
+      const f = item._full || {};
+      const parts = [];
+      parts.push(`#${idx+1}`);
+      parts.push(`${item.producer || '?'} - ${item.wineName || '?'}`);
+      if (item.vintage) parts.push(`${item.vintage}`);
+      if (item.type) parts.push(item.type);
+      if (f.grapes && f.grapes.length) parts.push(`vitigni: ${f.grapes.join('/')}`);
+      if (item.region || item.country) parts.push(`origine: ${[item.region, item.country].filter(Boolean).join(', ')}`);
+      if (f.alcohol) parts.push(`${f.alcohol}`);
+      if (f.servingTemp) parts.push(`servire ${f.servingTemp}`);
+      if (f.agingPotential) parts.push(`invecchiamento ${f.agingPotential}`);
+      if (f.qualityScore) parts.push(`Q:${f.qualityScore}/100`);
+      if (f.price && f.price.avg) parts.push(`~${f.price.avg}€`);
+      if (f.certification && f.certification.type && f.certification.type !== 'sconosciuto' && f.certification.type !== 'convenzionale') {
+        parts.push(f.certification.type);
+      }
+      if (f.pairings && f.pairings.length) parts.push(`abbinamenti: ${f.pairings.join('; ')}`);
+      if (f.tastingNotes) {
+        // Compresso a max 200 char per non esplodere il context
+        const tn = f.tastingNotes.length > 200 ? f.tastingNotes.substring(0, 197) + '...' : f.tastingNotes;
+        parts.push(`note: ${tn}`);
+      }
+      // Degustazioni personali registrate dall'utente: dato prezioso per consigli mirati.
+      // Compresse a max 3 più recenti per vino, ciascuna con voto + nota breve max 100 char.
+      const tastings = (f.tastings || []).slice(0, 3);
+      if (tastings.length) {
+        const tBits = tastings.map(t => {
+          const segs = [];
+          if (t.stars) segs.push(`${t.stars}/5`);
+          if (t.date) segs.push(t.date);
+          if (t.note) {
+            const n = t.note.length > 100 ? t.note.substring(0, 97) + '...' : t.note;
+            segs.push(`"${n}"`);
+          }
+          return segs.join(' ');
+        }).join(' / ');
+        parts.push(`degustazioni: ${tBits}`);
+      }
+      return parts.join(' | ');
+    }).join('\n');
+
+    // Conto totale degustazioni per l'introduzione
+    let totalTastings = 0;
+    h.forEach(item => {
+      const ts = (item._full && item._full.tastings) || [];
+      totalTastings += ts.length;
+    });
+
+    return { wineCount: h.length, currentYear, compactWines, totalTastings };
+  }
+
+  function buildSommelierSystem(ctx) {
+    const tastingNote = ctx.totalTastings > 0
+      ? `\nL'utente ha registrato ${ctx.totalTastings} degustazioni personali. Quando rilevanti, USALE attivamente per consigli più mirati: se ha amato un vino (voto ≥4), suggerisci altri della cantina con caratteristiche affini (vitigno, regione, struttura). Se l'ha valutato basso, evita di riproporlo. Le note personali ("nota tra virgolette") rivelano i suoi gusti reali, più dei dati oggettivi.`
+      : '';
+    return `Sei il sommelier personale di Casa Nuvola. Hai accesso completo al catalogo della cantina dell'utente (${ctx.wineCount} vini). Anno corrente: ${ctx.currentYear}.${tastingNote}
+
+CANTINA ATTUALE:
+${ctx.compactWines}
+
+REGOLE COMPORTAMENTALI:
+1. Tono caldo, competente, da sommelier vero — mai burocratico. Italiano impeccabile, pacato, leggermente letterario. Niente emoji.
+2. Risposte CONCISE: 2-4 frasi tipiche, max 5-6 per consigli articolati. Mai elenchi puntati lunghi se non richiesti.
+3. CITA i vini SEMPRE con il formato esatto "<wine-ref>Produttore – Nome Vino YYYY</wine-ref>" (un tag HTML personalizzato). Esempio: <wine-ref>Tenuta La Presa – Lugana 2022</wine-ref>. Questo permetterà l'evidenziazione visiva.
+4. Quando consigli un vino, MOTIVA brevemente: perché QUEL vino per QUELLA situazione (vitigno, struttura, annata, abbinamento storico). Non limitarti a nominarlo.
+5. Se non hai dati sufficienti per rispondere bene (es. utente chiede di un vino non in cantina), dillo onestamente.
+6. Per abbinamenti cibo-vino: usa criteri reali (acidità con grasso, tannino con proteine, dolcezza con piccante, intensità simile, contrasti regionali tradizionali).
+7. Per "quando aprire": basa il giudizio su annata + invecchiamento dichiarato. Se annata > 10 anni e potenziale "5-10 anni": "stai sforando, beverlo presto". Se annata < 3 anni e potenziale "10+": "ancora giovane, può aspettare".
+8. Per "rapporto qualità/prezzo": confronta Q (punteggio) e prezzo. Soglie indicative: <20€ Q≥85 ottimo affare; 20-50€ Q≥90 buono; >50€ Q<90 sopravvalutato.
+9. Se l'utente chiede consigli generici ("cosa apro stasera?"), CHIEDI brevemente il contesto: con cosa, con chi, occasione. Una sola domanda di chiarimento, poi rispondi.
+10. NON inventare dati che non hai (prezzi, abbinamenti, annate non in cantina). Se mancano, dillo.
+11. Rispondi in HTML semplice: usa <p> per paragrafi, <strong> per enfasi, <em> per dettagli tecnici, <wine-ref> per riferimenti ai vini. Niente markdown.`;
+  }
+
+  function buildSommelierSuggestions() {
+    const h = loadHistory();
+    const baseSuggs = [
+      'Cosa apro stasera?',
+      'Quale ha il miglior rapporto qualità/prezzo?',
+      'Quali sono pronti da bere ora?'
+    ];
+    // Suggerimento contestuale se ci sono vini con potenziale invecchiamento
+    if (h.some(item => item._full && item._full.agingPotential)) {
+      baseSuggs.push('Quali vini dovrei aspettare?');
+    }
+    if (h.some(item => item._full && item._full.certification && ['biologico','biodinamico','sostenibile'].includes(item._full.certification.type))) {
+      baseSuggs.push('Mostrami i miei vini biologici');
+    }
+    // Se ci sono degustazioni con voto alto, suggerisci una richiesta che le sfrutti
+    if (h.some(item => item._full && item._full.tastings && item._full.tastings.some(t => (t.stars||0) >= 4))) {
+      baseSuggs.push('Suggeriscimi simili a quelli che ho amato');
+    }
+    return baseSuggs.slice(0, 4);
+  }
+
+  function renderSommelierThread() {
+    const thread = document.getElementById('sommelierThread');
+    if (!sommelierState.history.length) {
+      const ctx = buildCantinaContext();
+      const count = ctx ? ctx.wineCount : 0;
+      thread.innerHTML = `
+        <div class="sommelier-empty">
+          <div class="sommelier-empty-icon">✦</div>
+          <div class="sommelier-empty-text">Posso consigliarti vini per una cena, suggerirti quando aprire una bottiglia, valutare il rapporto qualità/prezzo della tua cantina, o rispondere ad altre domande sulla tua collezione.</div>
+          <div class="sommelier-empty-cantina-count">${count} vini in cantina</div>
+        </div>`;
+      return;
+    }
+    thread.innerHTML = sommelierState.history.map(msg => {
+      if (msg.role === 'user') {
+        return `<div class="sommelier-msg sommelier-msg-user">${escapeHTML(msg.content)}</div>`;
+      } else {
+        // I tag <wine-ref> sono parte del nostro mini-DSL: convertiamo in span con classe
+        let html = msg.content.replace(
+          /<wine-ref>([^<]+)<\/wine-ref>/g,
+          (_, name) => `<span class="wine-ref">${escapeHTML(name)}</span>`
+        );
+        return `<div class="sommelier-msg sommelier-msg-bot">${html}</div>`;
+      }
+    }).join('');
+    // Scroll all'ultimo messaggio
+    requestAnimationFrame(() => {
+      thread.scrollTop = thread.scrollHeight;
+    });
+  }
+
+  function renderSommelierSuggestions() {
+    const wrap = document.getElementById('sommelierSuggestions');
+    // Mostro suggerimenti solo se la chat è vuota
+    if (sommelierState.history.length > 0) {
+      wrap.innerHTML = '';
+      return;
+    }
+    const suggs = buildSommelierSuggestions();
+    wrap.innerHTML = suggs.map(s =>
+      `<button class="sommelier-suggestion" data-sugg="${escapeHTML(s)}">${escapeHTML(s)}</button>`
+    ).join('');
+    wrap.querySelectorAll('[data-sugg]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('sommelierInput').value = btn.dataset.sugg;
+        sendSommelierMessage();
+      });
+    });
+  }
+
+  function showTyping() {
+    const thread = document.getElementById('sommelierThread');
+    const typing = document.createElement('div');
+    typing.className = 'sommelier-msg sommelier-msg-typing';
+    typing.id = 'sommelierTyping';
+    typing.innerHTML = '<div class="sommelier-msg-typing-dots"><span></span><span></span><span></span></div>';
+    thread.appendChild(typing);
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  function hideTyping() {
+    const t = document.getElementById('sommelierTyping');
+    if (t) t.remove();
+  }
+
+  async function sendSommelierMessage() {
+    if (sommelierState.isSending) return;
+    const input = document.getElementById('sommelierInput');
+    const text = input.value.trim();
+    if (!text) return;
+    if (!apiKey) {
+      showError('Configura prima la chiave API.');
+      return;
+    }
+    const ctx = buildCantinaContext();
+    if (!ctx) {
+      // Non dovrebbe succedere (pulsante nascosto se cantina vuota), ma difensivo
+      return;
+    }
+
+    sommelierState.isSending = true;
+    document.getElementById('sommelierSend').disabled = true;
+    input.value = '';
+    input.style.height = 'auto';
+
+    // Aggiungo messaggio utente
+    sommelierState.history.push({ role: 'user', content: text });
+    renderSommelierThread();
+    renderSommelierSuggestions();
+
+    showTyping();
+
+    try {
+      // Costruisco messages: tutta la storia
+      const messages = sommelierState.history.map(m => ({ role: m.role, content: m.content }));
+
+      const response = await callAPI({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 800,
+        system: [
+          { type: 'text', text: buildSommelierSystem(ctx), cache_control: { type: 'ephemeral' } }
+        ],
+        messages: messages
+      });
+
+      const reply = extractText(response);
+
+      hideTyping();
+
+      // Aggiungo risposta
+      sommelierState.history.push({ role: 'assistant', content: reply });
+      // Cap storia a 20 messaggi (10 turn) per non far esplodere il context
+      if (sommelierState.history.length > 20) {
+        sommelierState.history = sommelierState.history.slice(-20);
+      }
+      renderSommelierThread();
+    } catch (err) {
+      hideTyping();
+      // Rollback messaggio utente in caso di errore
+      const errMsg = err.message || 'Errore di rete';
+      sommelierState.history.push({
+        role: 'assistant',
+        content: `<p><em>Mi scuso, non sono riuscito a rispondere: ${escapeHTML(errMsg)}. Riprova tra qualche istante.</em></p>`
+      });
+      renderSommelierThread();
+    } finally {
+      sommelierState.isSending = false;
+      document.getElementById('sommelierSend').disabled = false;
+      input.focus();
+    }
+  }
+
+  function openSommelierModal() {
+    const modal = document.getElementById('sommelierModal');
+    modal.hidden = false;
+    sommelierState.isOpen = true;
+    renderSommelierThread();
+    renderSommelierSuggestions();
+    setTimeout(() => document.getElementById('sommelierInput').focus(), 100);
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSommelierModal() {
+    document.getElementById('sommelierModal').hidden = true;
+    sommelierState.isOpen = false;
+    document.body.style.overflow = '';
+    // Reset conversazione alla chiusura per ripartire fresh
+    sommelierState.history = [];
+  }
+
+  // Bindings
+  document.getElementById('askSommelierBtn').addEventListener('click', openSommelierModal);
+  document.getElementById('sommelierClose').addEventListener('click', closeSommelierModal);
+  document.getElementById('sommelierSend').addEventListener('click', sendSommelierMessage);
+  document.getElementById('sommelierInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendSommelierMessage();
+    }
+  });
+  // Auto-resize textarea
+  document.getElementById('sommelierInput').addEventListener('input', e => {
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+  });
+  // Esc per chiudere
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && sommelierState.isOpen) closeSommelierModal();
+  });
+  // Click fuori dal contenuto chiude
+  document.getElementById('sommelierModal').addEventListener('click', e => {
+    if (e.target.id === 'sommelierModal') closeSommelierModal();
+  });
+
+  // ===== Bindings DIARIO DEGUSTAZIONI =====
+  // Event delegation: i pulsanti "+ Registra" e "✕ rimuovi degustazione"
+  // sono dinamici, generati dentro le card storico. Uso historyContent come root.
+  historyContent.addEventListener('click', e => {
+    // Pulsante "Registra una degustazione"
+    const addBtn = e.target.closest('[data-add-tasting]');
+    if (addBtn) {
+      e.stopPropagation();
+      const idx = parseInt(addBtn.dataset.addTasting);
+      openTastingModal(idx);
+      return;
+    }
+    // Pulsante "✕" su singola degustazione
+    const delBtn = e.target.closest('[data-del-tasting]');
+    if (delBtn) {
+      e.stopPropagation();
+      const tastingId = delBtn.dataset.delTasting;
+      const wineIdx = parseInt(delBtn.dataset.wineIdx);
+      if (!confirm('Rimuovere questa degustazione? Operazione irreversibile.')) return;
+      if (deleteTasting(wineIdx, tastingId)) {
+        renderHistory();
+      }
+      return;
+    }
+  });
+
+  // Stelle: click selezione voto 1-5
+  document.querySelectorAll('.tasting-star-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const n = parseInt(btn.dataset.star);
+      tastingState.selectedStars = n;
+      // Highlight da 1 a N
+      document.querySelectorAll('.tasting-star-btn').forEach(b => {
+        const v = parseInt(b.dataset.star);
+        if (v <= n) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+    });
+  });
+
+  // Chip occasioni: mutua esclusione (single-select)
+  document.querySelectorAll('.tasting-occasion-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const occ = btn.dataset.occ;
+      if (tastingState.selectedOccasion === occ) {
+        // Click sullo stesso → deseleziona
+        tastingState.selectedOccasion = null;
+        btn.classList.remove('selected');
+      } else {
+        tastingState.selectedOccasion = occ;
+        document.querySelectorAll('.tasting-occasion-chip').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      }
+    });
+  });
+
+  // Chiudi modal
+  document.getElementById('tastingModalClose').addEventListener('click', closeTastingModal);
+  document.getElementById('tastingCancelBtn').addEventListener('click', closeTastingModal);
+  document.getElementById('tastingSaveBtn').addEventListener('click', submitTasting);
+
+  // Click fuori dal contenuto chiude
+  document.getElementById('tastingModal').addEventListener('click', e => {
+    if (e.target.id === 'tastingModal') closeTastingModal();
+  });
+  // Esc chiude (solo se non è aperto sommelier)
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !document.getElementById('tastingModal').hidden && !sommelierState.isOpen) {
+      closeTastingModal();
+    }
+  });
 
   renderHistory();
 })();
